@@ -5,7 +5,7 @@ const MarkerPopup = (props) => {
   const { name } = props.data;
 
   return  (<Popup>
-    <div className='poup-text'>{name}</div>
+    <div className='popup-text'>{name}</div>
   </Popup>);
 };
 
