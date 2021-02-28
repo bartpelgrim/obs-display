@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import Markers from './StationMarkers';
 
 
