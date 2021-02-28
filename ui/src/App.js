@@ -1,22 +1,30 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import MapView from './components/Map/MapView.js'
+
 import './App.css';
 
 function App() {
+  const [obsData, setObsData] = useState([])
+
+  const getObs10 = () => {
+    fetch('/obs')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setObsData(data);
+      });
+  }
+
+  useEffect(() =>{
+    getObs10();
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <MapView
+          obsData={obsData}
+        />
       </header>
     </div>
   );
