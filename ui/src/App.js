@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@material-ui/core/Grid'
 import MapView from './components/Map/MapView.js'
 
 import './App.css';
@@ -22,9 +23,24 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <MapView
-          obsData={obsData}
-        />
+        <Grid
+          container
+          direction={"row"}
+          justify={"center"}
+          alignItems={"center"}
+          display={"flex"}
+        >
+          <Grid item xs={2}>
+            <div>
+              <h1>Sidebar</h1>
+            </div>
+          </Grid>
+          <Grid item xs={10}>
+            <MapView
+              obsData={obsData}
+            />
+          </Grid>
+        </Grid>
       </header>
     </div>
   );
