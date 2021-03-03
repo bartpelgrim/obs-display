@@ -16,10 +16,10 @@ const PigeonMap = (props) => {
   useEffect(() => {
     if (observations) {
       const newMarkers = observations.map((obs) => {
-        if (obs[element]) {
+        if (obs[element.key]) {
           return (
             <PigeonMarker key={obs.name} anchor={[obs.lat, obs.lon]}>
-              {obs[element]}
+              {obs[element.key]}
             </PigeonMarker>
           )
         }
@@ -37,7 +37,7 @@ const PigeonMap = (props) => {
       onBoundsChanged={({ center, zoom }) => { setCenter(center); setZoom(zoom) }}
     >
       {markers}
-      {element}
+      {element.displayValue}
     </Map>
   );
 };
