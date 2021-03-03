@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid'
-import MapView from './components/Map/MapView.js'
+import PigeonMap from './components/Map/PigeonMap.js'
 
 import './App.css';
 
@@ -36,8 +36,9 @@ function App() {
             </div>
           </Grid>
           <Grid item xs={10}>
-            <MapView
-              obsData={obsData}
+            <PigeonMap
+              observations={obsData.observations}
+              element={"air_temperature"}
             />
           </Grid>
         </Grid>
