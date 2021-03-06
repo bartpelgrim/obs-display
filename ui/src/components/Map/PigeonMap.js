@@ -2,6 +2,7 @@ import { Map } from 'pigeon-maps'
 import { useState, useEffect } from 'react'
 
 import { PigeonMarker } from './PigeonMarker.js'
+import WindMarker from '../WindMarker/WindMarker.js'
 
 function mapTilerProvider(x, y, z) {
   return `https://c.tile.openstreetmap.org/${z}/${x}/${y}.png`
@@ -17,11 +18,24 @@ const PigeonMap = (props) => {
     if (observations) {
       const newMarkers = observations.map((obs) => {
         if (obs[element.key]) {
-          return (
-            <PigeonMarker key={obs.name} anchor={[obs.lat, obs.lon]}>
-              {obs[element.key]}
-            </PigeonMarker>
-          )
+          if (element.key === 'wind_direction') {
+            return (
+              <WindMarker
+                key={obs.name}
+                anchor={[obs.lat, obs.lon]}
+                windDirection={obs[element.key]}
+                windSpeed={obs["wind_speed_bft"]}
+              >
+              </WindMarker>
+            );
+          }
+          else {
+            return (
+              <PigeonMarker key={obs.name} anchor={[obs.lat, obs.lon]}>
+                {obs[element.key]}
+              </PigeonMarker>
+            );
+          }
         }
       });
       setMarkers(newMarkers);
