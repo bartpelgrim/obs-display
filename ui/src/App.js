@@ -47,6 +47,7 @@ function App() {
             <PigeonMap
               observations={obsData.observations}
               element={selectedElement}
+              time={obsData.time}
             />
           </Grid>
         </Grid>

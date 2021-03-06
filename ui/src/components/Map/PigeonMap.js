@@ -8,7 +8,7 @@ function mapTilerProvider(x, y, z) {
 }
 
 const PigeonMap = (props) => {
-  const { observations, element } = props;
+  const { observations, element, time } = props;
   const [center, setCenter] = useState([52.3, 5.2]);
   const [zoom, setZoom] = useState(8);
   const [markers, setMarkers] = useState(null);
@@ -37,7 +37,7 @@ const PigeonMap = (props) => {
       onBoundsChanged={({ center, zoom }) => { setCenter(center); setZoom(zoom) }}
     >
       {markers}
-      {element.displayValue}
+      {element.displayValue} {time}
     </Map>
   );
 };

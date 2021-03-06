@@ -64,5 +64,6 @@ def obs_to_dict(df: pandas.DataFrame) -> Dict[str, list]:
         station_list.append(station)
 
     return {
+        'time': str(df.index[0][1]),
         'observations': station_list,
     }
