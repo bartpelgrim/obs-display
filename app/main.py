@@ -4,20 +4,12 @@ from flask import Flask
 from flask_cors import CORS
 
 from app.exception import ApiException
-from app.knmi_obs import KnmiApi
-from app.dataset import file_content_to_dataframe, obs_to_dict
+from app.dataset import ObservationData
 
 app = Flask(__name__, static_folder='../ui/build', static_url_path='/')
 CORS(app)
 
-
-def read_api_key() -> str:
-    with open('api_key.txt') as key_file:
-        return key_file.read()
-
-
-api_key = read_api_key()
-api = KnmiApi(api_key)
+dataset = ObservationData()
 
 
 @app.route('/')
@@ -28,10 +20,11 @@ def index():
 @app.route('/obs')
 def get_obs():
     try:
-        file_content = api.get_latest_obs()
-        df = file_content_to_dataframe(file_content)
-        result = obs_to_dict(df)
-        return json.dumps(result)
+        dataset.refresh()
+        if len(dataset.obs_data) > 0:
+            return json.dumps(dataset.obs_data[-1])
+        else:
+            return None, 404
     except ApiException as exc:
         print(exc)
         return exc.args[0], 500
