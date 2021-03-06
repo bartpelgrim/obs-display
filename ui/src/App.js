@@ -31,6 +31,11 @@ function App() {
 
   useEffect(() =>{
     getObs10();
+
+    const interval = setInterval(() =>{
+      getObs10();
+    }, 5*60*1000);
+    return () => clearInterval(interval);
   }, [])
 
   return (
