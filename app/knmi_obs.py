@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 import requests
 
+from app.exception import ApiException
+
 
 class KnmiApi:
     def __init__(self, api_key: str):
@@ -24,9 +26,9 @@ class KnmiApi:
             if files:
                 return files[-1]['filename']
             else:
-                raise Exception('No files available')
+                raise ApiException('No files available')
         else:
-            raise Exception(f'Unable to get latest files: {response.text}')
+            raise ApiException(f'Unable to get latest files: {response.text}')
 
     def _get_file_url(self, filename: str) -> str:
         response = requests.get(
@@ -40,7 +42,7 @@ class KnmiApi:
         if response.status_code == 200:
             return response.json().get('temporaryDownloadUrl')
         else:
-            raise Exception(f'Unable to get file url: {response.text}')
+            raise ApiException(f'Unable to get file url: {response.text}')
 
     @staticmethod
     def _get_obs_file(file_url: str) -> bytes:
@@ -48,7 +50,7 @@ class KnmiApi:
         if response.status_code == 200:
             return response.content
         else:
-            raise Exception(f'Unable to get observation file: {response.text}')
+            raise ApiException(f'Unable to get observation file: {response.text}')
 
     def get_latest_obs(self) -> bytes:
         latest_file = self._get_latest_file()
