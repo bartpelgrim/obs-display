@@ -4,5 +4,6 @@ export const elementConfiguration = [
   {key: "dew_point", displayValue: "Dew Point"},
   {key: "weather_code", displayValue: "Weather Code"},
   {key: "wind_direction", displayValue: "Wind Direction"},
-  {key: "wind_speed", displayValue: "Wind Speed"}
+  {key: "wind_speed", displayValue: "Wind Speed m/s"},
+  {key: "wind_speed_bft", displayValue: "Wind Speed Bft"}
 ];

@@ -28,5 +28,6 @@ class TestDataset:
             'air_pressure': 1035.44,
             'weather_code': 2.0,
             'wind_direction': 300.4,
-            'wind_speed': 1.77
+            'wind_speed': 1.77,
+            'wind_speed_bft': 2,
         }
