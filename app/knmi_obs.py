@@ -5,6 +5,9 @@ import requests
 from app.exception import ApiException
 
 
+API_BASE_URL = 'https://api.dataplatform.knmi.nl/open-data/datasets/Actuele10mindataKNMIstations/versions/2/files'
+
+
 class KnmiApi:
     def __init__(self, api_key: str):
         self.api_key = api_key
@@ -13,7 +16,7 @@ class KnmiApi:
         dt = datetime.utcnow() - timedelta(hours=1)
         dt_string = dt.strftime("%Y%m%d%H%M")
         response = requests.get(
-            url=f'https://api.dataplatform.knmi.nl/open-data/datasets/Actuele10mindataKNMIstations/versions/2/files',
+            url=API_BASE_URL,
             headers={
                 "Authorization": self.api_key
             },
@@ -32,8 +35,7 @@ class KnmiApi:
 
     def _get_file_url(self, filename: str) -> str:
         response = requests.get(
-            url=f'https://api.dataplatform.knmi.nl/open-data/datasets/Actuele10mindataKNMIstations/versions/2/files/'
-                f'{filename}/url',
+            url=f'{API_BASE_URL}/{filename}/url',
             headers={
                 "Authorization": self.api_key
             },
