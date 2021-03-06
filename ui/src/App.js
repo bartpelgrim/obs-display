@@ -12,10 +12,20 @@ function App() {
 
   const getObs10 = () => {
     fetch('/obs')
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        else {
+          throw new Error(response.statusText);
+        }
+      })
       .then(data => {
         console.log(data);
         setObsData(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
 

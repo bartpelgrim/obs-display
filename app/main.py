@@ -3,6 +3,7 @@ import json
 from flask import Flask
 from flask_cors import CORS
 
+from app.exception import ApiException
 from app.knmi_obs import KnmiApi
 from app.dataset import file_content_to_dataframe, obs_to_dict
 
@@ -26,10 +27,14 @@ def index():
 
 @app.route('/obs')
 def get_obs():
-    file_content = api.get_latest_obs()
-    df = file_content_to_dataframe(file_content)
-    result = obs_to_dict(df)
-    return json.dumps(result)
+    try:
+        file_content = api.get_latest_obs()
+        df = file_content_to_dataframe(file_content)
+        result = obs_to_dict(df)
+        return json.dumps(result)
+    except ApiException as exc:
+        print(exc)
+        return exc.args[0], 500
 
 
 if __name__ == '__main__':
