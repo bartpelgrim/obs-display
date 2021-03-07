@@ -17,7 +17,7 @@ const PigeonMap = (props) => {
   useEffect(() => {
     if (observations) {
       const newMarkers = observations.map((obs) => {
-        if (obs[element.key]) {
+        if (obs[element.key] != null) {
           if (element.key === 'wind_direction') {
             return (
               <WindMarker
