@@ -4,7 +4,7 @@ from typing import Dict
 import pandas
 from xarray import open_dataset
 
-from app.conversions import mps_to_bft
+from app.conversions import mps_to_bft, mps_to_kph
 from app.knmi_obs import KnmiApi
 
 
@@ -31,12 +31,16 @@ def obs_to_dict(df: pandas.DataFrame) -> Dict[str, list]:
             lon=row.lon,
             height=row.height,
             air_temperature=row.ta,
+            max_temperature_12h=row.Tx12,
+            min_temperature_12h=row.Tn12,
             dew_point=row.td,
             air_pressure=row.pp,
             weather_code=row.ww,
             wind_direction=row.dd,
             wind_speed=row.ff,
             wind_speed_bft=mps_to_bft(row.ff),
+            wind_gust=row.gff,
+            wind_gust_kph=mps_to_kph(row.gff),
         )
         station_list.append(station)
 
