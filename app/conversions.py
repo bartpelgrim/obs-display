@@ -1,7 +1,7 @@
-from typing import Union
+from typing import Union, Optional
 
 
-def mps_to_bft(wind_speed: float) -> Union[int, None]:
+def mps_to_bft(wind_speed: float) -> Optional[int]:
     if wind_speed is None:
         return None
     elif wind_speed < 0.2:
@@ -30,3 +30,10 @@ def mps_to_bft(wind_speed: float) -> Union[int, None]:
         return 11
     else:
         return 12
+
+
+def mps_to_kph(speed: float) -> Optional[int]:
+    if speed is None:
+        return None
+    else:
+        return round(speed * 3.6)
