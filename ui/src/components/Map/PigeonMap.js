@@ -31,9 +31,12 @@ const PigeonMap = (props) => {
           }
           else {
             return (
-              <PigeonMarker key={obs.name} anchor={[obs.lat, obs.lon]}>
-                {obs[element.key]}
-              </PigeonMarker>
+              <PigeonMarker
+                key={obs.name}
+                anchor={[obs.lat, obs.lon]}
+                value={obs[element.key]}
+                element={element}
+              />
             );
           }
         }
