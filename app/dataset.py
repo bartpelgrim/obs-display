@@ -1,5 +1,5 @@
 from io import BytesIO
-from typing import Dict
+from typing import Dict, Optional
 
 import pandas
 from xarray import open_dataset
@@ -55,7 +55,7 @@ class ObservationData:
     MAX_OBS_IN_CACHE = 10
 
     def __init__(self):
-        self.obs_data = []
+        self._obs_data = {}
         api_key = read_api_key()
         self.api = KnmiApi(api_key)
 
@@ -63,8 +63,18 @@ class ObservationData:
         file_content = self.api.get_latest_obs()
         df = file_content_to_dataframe(file_content)
         new_obs = obs_to_dict(df)
-        self.obs_data.append(new_obs)
+        self._obs_data[new_obs['timestamp']] = new_obs
 
         # delete oldest observations when max size is reached
-        while len(self.obs_data) > self.MAX_OBS_IN_CACHE:
-            self.obs_data.pop(0)
+        while len(self._obs_data) > self.MAX_OBS_IN_CACHE:
+            self._obs_data.pop(0)
+
+    def latest(self):
+        latest_key = sorted(list(self._obs_data.keys()))[-1]
+        return self._obs_data[latest_key]
+
+    def all(self):
+        return list(self._obs_data.values())
+
+    def with_timestamp(self, timestamp: int) -> Optional[dict]:
+        return self._obs_data.get(timestamp)

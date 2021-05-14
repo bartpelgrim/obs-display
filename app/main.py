@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
 from app.exception import ApiException
@@ -19,10 +19,15 @@ def index():
 
 @app.route('/obs')
 def get_obs():
+    timestamp = request.args.get('timestamp')
     try:
         dataset.refresh()
-        if len(dataset.obs_data) > 0:
-            return json.dumps(dataset.obs_data[-1])
+        if timestamp:
+            data = dataset.with_timestamp(timestamp)
+        else:
+            data = dataset.latest()
+        if data:
+            return json.dumps(data)
         else:
             return None, 404
     except ApiException as exc:
