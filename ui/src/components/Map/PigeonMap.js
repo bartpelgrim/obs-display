@@ -13,7 +13,7 @@ const PigeonMap = (props) => {
   const [center, setCenter] = useState([52.3, 5.2]);
   const [zoom, setZoom] = useState(8);
   const [markers, setMarkers] = useState(null);
-  const [dateTime, setDateTime] = useState(new Date(0));
+  const [dateTime, setDateTime] = useState(null);
 
   useEffect(() => {
     if (observations) {
@@ -56,7 +56,7 @@ const PigeonMap = (props) => {
       onBoundsChanged={({ center, zoom }) => { setCenter(center); setZoom(zoom) }}
     >
       {markers}
-      {element.displayValue} {dateTime.toLocaleString()}
+      {element.displayValue} {dateTime == null ? "" : dateTime.toLocaleString()}
     </Map>
   );
 };
