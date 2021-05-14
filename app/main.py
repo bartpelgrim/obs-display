@@ -21,10 +21,10 @@ def index():
 def get_obs():
     timestamp = request.args.get('timestamp')
     try:
-        dataset.refresh()
         if timestamp:
             data = dataset.with_timestamp(timestamp)
         else:
+            dataset.refresh()
             data = dataset.latest()
         if data:
             return json.dumps(data)
