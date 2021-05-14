@@ -44,8 +44,9 @@ def obs_to_dict(df: pandas.DataFrame) -> Dict[str, list]:
         )
         station_list.append(station)
 
+    timestamp = int(df.index[0][1].timestamp() * 1000)
     return {
-        'time': str(df.index[0][1]),
+        'timestamp': timestamp,
         'observations': station_list,
     }
 
