@@ -67,7 +67,8 @@ class ObservationData:
 
         # delete oldest observations when max size is reached
         while len(self._obs_data) > self.MAX_OBS_IN_CACHE:
-            self._obs_data.pop(0)
+            oldest_key = sorted(list(self._obs_data.keys()))[0]
+            self._obs_data.pop(oldest_key)
 
     def latest(self):
         latest_key = sorted(list(self._obs_data.keys()))[-1]

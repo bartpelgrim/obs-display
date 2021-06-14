@@ -22,7 +22,7 @@ def get_obs():
     timestamp = request.args.get('timestamp')
     try:
         if timestamp:
-            data = dataset.with_timestamp(timestamp)
+            data = dataset.with_timestamp(int(timestamp))
         else:
             dataset.refresh()
             data = dataset.latest()
