@@ -4,12 +4,13 @@ import pytest
 
 from app.dataset import file_content_to_dataframe, obs_to_dict, ObservationData
 
+from tests.helpers.mock_data import mock_data
+
 
 class TestDataset:
     @pytest.fixture(autouse=True)
     def __around(self):
-        with open('tests/data/KMDS__OPER_P___10M_OBS_L2_202103060830.nc', 'rb') as test_file:
-            self.test_dataset = test_file.read()
+        with mock_data() as self.test_dataset:
             yield
 
     def test_file_content_to_dataframe(self):
