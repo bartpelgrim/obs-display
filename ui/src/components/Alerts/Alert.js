@@ -19,7 +19,12 @@ export function ErrorSnackbar (props) {
         autoHideDuration={5000}
         onClose={onClose}
       >
-        <Alert severity="error">{error}</Alert>
+        <Alert
+          severity="error"
+          onClose={onClose}
+        >
+          {error}
+        </Alert>
       </Snackbar>
     );
   }
