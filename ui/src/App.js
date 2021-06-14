@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid'
 import PigeonMap from './components/Map/PigeonMap.js'
 import { elementConfiguration } from './model/Elements'
+import { ErrorSnackbar } from './components/Alerts/Alert'
 import ElementMenu from './components/SelectionMenu/ElementMenu'
 import TimeButtonGroup from './components/TimeButtonGrid/TimeButtonGroup'
 
@@ -11,6 +12,7 @@ function App() {
   const [obsData, setObsData] = useState([]);
   const [timestamp, setTimestamp] = useState(null);
   const [selectedElement, setSelectedElement] = useState(elementConfiguration[1]);
+  const [error, setError] = useState(null);
 
   const getObs10 = (timestamp = 0) => {
     const url = timestamp !== 0 ? `/obs?timestamp=${timestamp}` : '/obs';
@@ -20,13 +22,22 @@ function App() {
           return response.json();
         }
         else {
-          throw new Error(response.statusText);
+          if (response.status === 404) {
+            const date = new Date(timestamp);
+            setError(`Timestamp not found: ${date.toLocaleString()}`);
+          }
+          else {
+            setError(response.statusText);
+          }
+          return null;
         }
       })
       .then(data => {
-        console.log(data);
-        setObsData(data);
-        setTimestamp(data.timestamp);
+        if (data) {
+          console.log(data);
+          setObsData(data);
+          setTimestamp(data.timestamp);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -59,6 +70,10 @@ function App() {
   return (
     <Grid className="App">
       <header className="App-header">
+        <ErrorSnackbar
+          error={error}
+          setError={setError}
+        />
         <Grid
           container
           direction={"row"}

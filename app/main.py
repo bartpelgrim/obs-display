@@ -29,7 +29,7 @@ def get_obs():
         if data:
             return json.dumps(data)
         else:
-            return None, 404
+            return "Timestamp not found", 404
     except ApiException as exc:
         print(exc)
         return exc.args[0], 500
