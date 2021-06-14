@@ -1,4 +1,5 @@
 from io import BytesIO
+import os
 from typing import Dict, Optional
 
 import pandas
@@ -7,9 +8,11 @@ from xarray import open_dataset
 from app.conversions import mps_to_bft, mps_to_kph
 from app.knmi_obs import KnmiApi
 
+DIR_PATH = os.path.dirname(os.path.abspath(__file__))
+
 
 def read_api_key() -> str:
-    with open('api_key.txt') as key_file:
+    with open(f'{DIR_PATH}/api_key.txt') as key_file:
         return key_file.read()
 
 
