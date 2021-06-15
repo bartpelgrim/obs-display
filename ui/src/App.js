@@ -5,13 +5,16 @@ import { elementConfiguration } from './model/Elements'
 import { ErrorSnackbar } from './components/Alerts/Alert'
 import ElementMenu from './components/SelectionMenu/ElementMenu'
 import TimeButtonGroup from './components/TimeButtonGrid/TimeButtonGroup'
+import CustomDialog from './components/Dialog/Dialog'
 
 import './App.css';
 
 function App() {
   const [obsData, setObsData] = useState([]);
+  const [timeseriesData, setTimeseriesData] = useState(null);
   const [timestamp, setTimestamp] = useState(null);
   const [selectedElement, setSelectedElement] = useState(elementConfiguration[1]);
+  const [graphOpen, setGraphOpen] = useState(false);
   const [error, setError] = useState(null);
 
   const getObs10 = (timestamp = 0) => {
@@ -67,6 +70,25 @@ function App() {
     return () => clearInterval(interval);
   }, [])
 
+  const getStationTimeseries = (stationName) => {
+    console.log(stationName)
+    setGraphOpen(true);
+    const url = `/station?name=${stationName}`;
+    fetch(url)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then(data => {
+        console.log(data);
+        setTimeseriesData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <Grid className="App">
       <header className="App-header">
@@ -110,9 +132,16 @@ function App() {
               observations={obsData.observations}
               element={selectedElement}
               timestamp={obsData.timestamp}
+              onMarkerClick={getStationTimeseries}
             />
           </Grid>
         </Grid>
+        <CustomDialog
+          element={selectedElement}
+          timeseriesData={timeseriesData}
+          dialogOpen={graphOpen}
+          setDialogOpen={setGraphOpen}
+        />
       </header>
     </Grid>
   );

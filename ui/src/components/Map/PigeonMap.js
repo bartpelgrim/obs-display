@@ -9,7 +9,7 @@ function mapTilerProvider(x, y, z) {
 }
 
 const PigeonMap = (props) => {
-  const { observations, element, timestamp } = props;
+  const { observations, element, timestamp, onMarkerClick } = props;
   const [center, setCenter] = useState([52.3, 5.2]);
   const [zoom, setZoom] = useState(8);
   const [markers, setMarkers] = useState(null);
@@ -26,6 +26,7 @@ const PigeonMap = (props) => {
                 anchor={[obs.lat, obs.lon]}
                 windDirection={obs[element.key]}
                 windSpeed={obs["wind_speed_bft"]}
+                onMarkerClick={onMarkerClick}
               >
               </WindMarker>
             );
@@ -37,6 +38,8 @@ const PigeonMap = (props) => {
                 anchor={[obs.lat, obs.lon]}
                 value={obs[element.key]}
                 element={element}
+                onMarkerClick={onMarkerClick}
+                stationName={obs.name}
               />
             );
           }

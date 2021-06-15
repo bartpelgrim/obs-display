@@ -1,5 +1,5 @@
 export function PigeonMarker (props) {
-  const { left, top, style, onClick, value, element, children } = props;
+  const { left, top, style, onMarkerClick, value, element, children, stationName } = props;
 
   const calculateHslValue = (value) => {
     const hslMin = 300;
@@ -24,6 +24,10 @@ export function PigeonMarker (props) {
       hslValue = hslValue + 360;
     }
     return hslValue;
+  }
+
+  const onClick = () => {
+    onMarkerClick(stationName);
   }
 
   return (
