@@ -67,3 +67,12 @@ class TestObservationDataBase:
 
     def test_with_timestamp_returns_none(self):
         assert self.obs_data.with_timestamp(1234) is None
+
+    def test_timeseries(self):
+        result = self.obs_data.timeseries('AWG-1')
+        assert len(result) == 1
+        assert result[0]['name'] == 'AWG-1'
+
+    def test_timeseries_returns_empty_list_with_unknown_station(self):
+        result = self.obs_data.timeseries('oops')
+        assert len(result) == 0

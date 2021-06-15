@@ -35,5 +35,13 @@ def get_obs():
         return exc.args[0], 500
 
 
+@app.route('/station')
+def get_station_timeseries():
+    station_name = request.args.get('name')
+    result = dataset.timeseries(station_name)
+
+    return json.dumps({'timeseries': result})
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

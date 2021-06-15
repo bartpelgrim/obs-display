@@ -1,6 +1,6 @@
 from io import BytesIO
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 import pandas
 from xarray import open_dataset
@@ -82,3 +82,16 @@ class ObservationData:
 
     def with_timestamp(self, timestamp: int) -> Optional[dict]:
         return self._obs_data.get(timestamp)
+
+    def timeseries(self, station_name: str) -> List[dict]:
+        result = []
+        for item in self.all():
+            for obs in item['observations']:
+                if obs['name'] == station_name:
+                    result.append(dict(
+                        timestamp=item['timestamp'],
+                        **obs
+                    ))
+                    break
+
+        return result
