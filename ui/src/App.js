@@ -137,7 +137,9 @@ function App() {
           </Grid>
         </Grid>
         <CustomDialog
-          element={selectedElement}
+          selectedElement={selectedElement}
+          setSelectedElement={setSelectedElement}
+          elementConfiguration={elementConfiguration}
           timeseriesData={timeseriesData}
           dialogOpen={graphOpen}
           setDialogOpen={setGraphOpen}

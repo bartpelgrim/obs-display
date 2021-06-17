@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
+import ElementMenu from '../SelectionMenu/ElementMenu'
 import Graph from '../Graph/Graph'
 
 const styles = (theme) => ({
@@ -46,7 +47,7 @@ const DialogContent = withStyles((theme) => ({
 
 
 export default function CustomDialog(props) {
-  const { element, timeseriesData, dialogOpen, setDialogOpen } = props;
+  const { selectedElement, setSelectedElement, elementConfiguration, timeseriesData, dialogOpen, setDialogOpen } = props;
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -62,11 +63,16 @@ export default function CustomDialog(props) {
         maxWidth={'md'}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {element.displayValue}
+          {selectedElement.displayValue}
         </DialogTitle>
+        <ElementMenu
+          selectedElement={selectedElement}
+          setSelectedElement={setSelectedElement}
+          elementConfiguration={elementConfiguration}
+        />
         <Graph
           series={timeseriesData != null ? timeseriesData.timeseries : null}
-          element={element}
+          element={selectedElement}
         />
       </Dialog>
     </div>
