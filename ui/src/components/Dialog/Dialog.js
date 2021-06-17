@@ -47,7 +47,8 @@ const DialogContent = withStyles((theme) => ({
 
 
 export default function CustomDialog(props) {
-  const { selectedElement, setSelectedElement, elementConfiguration, timeseriesData, dialogOpen, setDialogOpen } = props;
+  const { selectedElement, setSelectedElement, selectedStation, elementConfiguration, timeseriesData, dialogOpen,
+    setDialogOpen } = props;
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -63,7 +64,7 @@ export default function CustomDialog(props) {
         maxWidth={'md'}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {selectedElement.displayValue}
+          {selectedStation}
         </DialogTitle>
         <ElementMenu
           selectedElement={selectedElement}

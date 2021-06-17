@@ -14,6 +14,7 @@ function App() {
   const [timeseriesData, setTimeseriesData] = useState(null);
   const [timestamp, setTimestamp] = useState(null);
   const [selectedElement, setSelectedElement] = useState(elementConfiguration[1]);
+  const [selectedStation, setSelectedStation] = useState(null);
   const [graphOpen, setGraphOpen] = useState(false);
   const [error, setError] = useState(null);
 
@@ -89,6 +90,11 @@ function App() {
       });
   }
 
+  const onMarkerClick = (stationName) => {
+    setSelectedStation(stationName);
+    getStationTimeseries(stationName);
+  }
+
   return (
     <Grid className="App">
       <header className="App-header">
@@ -132,7 +138,7 @@ function App() {
               observations={obsData.observations}
               element={selectedElement}
               timestamp={obsData.timestamp}
-              onMarkerClick={getStationTimeseries}
+              onMarkerClick={onMarkerClick}
             />
           </Grid>
         </Grid>
@@ -140,6 +146,7 @@ function App() {
           selectedElement={selectedElement}
           setSelectedElement={setSelectedElement}
           elementConfiguration={elementConfiguration}
+          selectedStation={selectedStation}
           timeseriesData={timeseriesData}
           dialogOpen={graphOpen}
           setDialogOpen={setGraphOpen}
