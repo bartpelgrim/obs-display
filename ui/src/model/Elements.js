@@ -30,8 +30,8 @@ export const elementConfiguration = [
   {
     key: "dew_point",
     displayValue: "Dew Point",
-    lowerBound: -20,
-    upperBound: 40,
+    lowerBound: -30,
+    upperBound: 30,
     unit: '°C'
   },
   {
