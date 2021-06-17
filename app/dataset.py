@@ -55,7 +55,7 @@ def obs_to_dict(df: pandas.DataFrame) -> Dict[str, list]:
 
 
 class ObservationData:
-    MAX_OBS_IN_CACHE = 18  # 3 hours
+    MAX_OBS_IN_CACHE = 36  # 6 hours
 
     def __init__(self):
         self._obs_data = {}
