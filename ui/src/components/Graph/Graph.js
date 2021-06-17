@@ -3,7 +3,7 @@ import moment from 'moment'
 
 
 export default function Graph(props) {
-  const { series, element, unit } = props;
+  const { series, element } = props;
 
   if (series) {
     return (
@@ -29,7 +29,7 @@ export default function Graph(props) {
             </XAxis>
             <YAxis
                 type={"number"}
-                unit={unit}
+                unit={element.unit}
                 width={80}
                 domain={[dataMin => (Math.round(dataMin - 1)), dataMax => (Math.round(dataMax + 1))]}
                 interval={"preserveStartEnd"}

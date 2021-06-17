@@ -67,7 +67,6 @@ export default function CustomDialog(props) {
         <Graph
           series={timeseriesData != null ? timeseriesData.timeseries : null}
           element={element}
-          unit={"C"}
         />
       </Dialog>
     </div>
