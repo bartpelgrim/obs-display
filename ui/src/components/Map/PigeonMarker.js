@@ -46,7 +46,7 @@ export function PigeonMarker (props) {
       fontSize: 20,
       ...(style || {})
     }} onClick={onClick}>
-      {value}
+      {value.toFixed(1)}
       {children}
     </div>
   );
