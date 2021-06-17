@@ -18,7 +18,7 @@ export default function Graph(props) {
               domain = {['auto', 'auto']}
               height={40}
               tickFormatter={(unixTime) => moment(unixTime).format("HH:mm")}
-              interval={11}
+              interval={0}
 
               scale={"time"}
             >
@@ -28,10 +28,11 @@ export default function Graph(props) {
               />
             </XAxis>
             <YAxis
-                typ={"number"}
+                type={"number"}
                 unit={unit}
                 width={80}
-                domain={['dataMin', 'dataMax']}
+                domain={[dataMin => (Math.round(dataMin - 1)), dataMax => (Math.round(dataMax + 1))]}
+                interval={"preserveStartEnd"}
             >
               <Label
                   value={element.displayValue}
@@ -41,11 +42,11 @@ export default function Graph(props) {
             </YAxis>
             <Line
                 // key={"air_temperature"}
-                type={"monotone"}
-                dataKey={"air_temperature"}
+                type={"linearOpen"}
+                dataKey={element.key}
                 stroke={"#ff0000"}
-                dot={false}
                 strokeOpacity={0.8}
+                isAnimationActive={false}
             >
             </Line>
           </LineChart>
