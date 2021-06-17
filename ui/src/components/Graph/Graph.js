@@ -18,7 +18,7 @@ export default function Graph(props) {
               domain = {['auto', 'auto']}
               height={40}
               tickFormatter={(unixTime) => moment(unixTime).format("HH:mm")}
-              interval={0}
+              interval={2}
 
               scale={"time"}
             >
