@@ -3,6 +3,7 @@ import json
 import os
 from typing import Dict, Optional, List
 
+import numpy as np
 import pandas
 from xarray import open_dataset
 
@@ -27,7 +28,7 @@ def file_content_to_dataframe(file_content: bytes) -> pandas.DataFrame:
 
 def obs_to_dict(df: pandas.DataFrame) -> Dict[str, list]:
     # replace NaN with None
-    df_with_nones = df.where(pandas.notnull(df), None)
+    df_with_nones = df.replace({np.nan: None})
     station_list = []
     for row in df_with_nones.itertuples():
         station = dict(
