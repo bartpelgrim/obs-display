@@ -1,4 +1,5 @@
 from io import BytesIO
+import json
 import os
 from typing import Dict, Optional, List
 
@@ -12,8 +13,9 @@ DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def read_api_key() -> str:
-    with open(f'{DIR_PATH}/api_key.txt') as key_file:
-        return key_file.read()
+    with open(f'{DIR_PATH}/api_key.json') as key_file:
+        content = key_file.read()
+        return json.loads(content)['key']
 
 
 def file_content_to_dataframe(file_content: bytes) -> pandas.DataFrame:
