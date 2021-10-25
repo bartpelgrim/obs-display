@@ -1,3 +1,6 @@
+import Tooltip from '@material-ui/core/Tooltip';
+
+
 export function PigeonMarker (props) {
   const { left, top, style, onMarkerClick, value, element, children, stationName } = props;
 
@@ -31,24 +34,26 @@ export function PigeonMarker (props) {
   }
 
   return (
-    <div style={{
-      position: 'absolute',
-      left: left - 20,
-      top: top - 20,
-      width: 40,
-      height: 40,
-      borderTopLeftRadius: '100%',
-      borderTopRightRadius: '100%',
-      borderBottomLeftRadius: '100%',
-      borderBottomRightRadius: '100%',
-      background: `hsl(${calculateHslValue(value)}, 100%, 50%)`,
-      color: 'black',
-      fontSize: 20,
-      ...(style || {})
-    }} onClick={onClick}>
-      {value.toFixed(1)}
-      {children}
-    </div>
+    <Tooltip title={stationName}>
+      <div style={{
+        position: 'absolute',
+        left: left - 20,
+        top: top - 20,
+        width: 40,
+        height: 40,
+        borderTopLeftRadius: '100%',
+        borderTopRightRadius: '100%',
+        borderBottomLeftRadius: '100%',
+        borderBottomRightRadius: '100%',
+        background: `hsl(${calculateHslValue(value)}, 100%, 50%)`,
+        color: 'black',
+        fontSize: 20,
+        ...(style || {})
+      }} onClick={onClick}>
+        {value.toFixed(1)}
+        {children}
+      </div>
+    </Tooltip>
   );
 }
 
