@@ -1,27 +1,27 @@
 export const elementConfiguration = [
   {
-    key: "air_pressure",
+    key: "air_pressure_at_sea_level",
     displayValue: "Air Pressure",
     lowerBound: 970,
     upperBound: 1030,
     unit: 'hPa'
   },
   {
-    key: "air_temperature",
+    key: "air_temperature_2m",
     displayValue: "Air Temperature",
     lowerBound: -20,
     upperBound: 40,
     unit: '°C'
   },
   {
-    key: "max_temperature_12h",
+    key: "air_temperature_2m_maximum_over_12h",
     displayValue: "Maximum temperature past 12h",
     lowerBound: -20,
     upperBound: 40,
     unit: '°C'
   },
   {
-    key: "min_temperature_12h",
+    key: "air_temperature_2m_minimum_over_12h",
     displayValue: "Minimum temperature past 12h",
     lowerBound: -20,
     upperBound: 40,

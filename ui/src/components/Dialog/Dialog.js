@@ -64,7 +64,7 @@ export default function CustomDialog(props) {
         maxWidth={'md'}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {selectedStation}
+          {selectedStation?.name}
         </DialogTitle>
         <ElementMenu
           selectedElement={selectedElement}
@@ -72,7 +72,7 @@ export default function CustomDialog(props) {
           elementConfiguration={elementConfiguration}
         />
         <Graph
-          series={timeseriesData != null ? timeseriesData.timeseries : null}
+          series={timeseriesData?.timeseries}
           element={selectedElement}
         />
       </Dialog>

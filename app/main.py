@@ -4,12 +4,12 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from app.exception import ApiException
-from app.dataset import ObservationData
+from app.dataset import ObservationReader
 
 app = Flask(__name__, static_folder='../ui/build', static_url_path='/')
 CORS(app)
 
-dataset = ObservationData()
+reader = ObservationReader()
 
 
 @app.route('/')
@@ -22,10 +22,9 @@ def get_obs():
     timestamp = request.args.get('timestamp')
     try:
         if timestamp:
-            data = dataset.with_timestamp(int(timestamp))
+            data = reader.with_timestamp(round(int(timestamp) / 1000))  # from javascript to python timestamp
         else:
-            dataset.refresh()
-            data = dataset.latest()
+            data = reader.latest()
         if data:
             return json.dumps(data)
         else:
@@ -37,8 +36,13 @@ def get_obs():
 
 @app.route('/station')
 def get_station_timeseries():
-    station_name = request.args.get('name')
-    result = dataset.timeseries(station_name)
+    station_id_str = request.args.get('id')
+    try:
+        station_id = int(station_id_str)
+    except ValueError:
+        return f"Invalid station_id: {station_id_str}", 400
+
+    result = reader.timeseries(station_id, history_hours=1)
 
     return json.dumps({'timeseries': result})
 

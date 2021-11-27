@@ -2,7 +2,8 @@ from unittest import mock
 
 import pytest
 
-from app.dataset import file_content_to_dataframe, obs_to_dict, ObservationData
+from app.database import Database, Observation, Station
+from app.dataset import file_content_to_dataframe, ObservationReader, ObservationWriter
 
 from tests.helpers.mock_data import mock_data
 
@@ -17,49 +18,113 @@ class TestDataset:
         df = file_content_to_dataframe(self.test_dataset)
         assert df.ta[0] == 4.6
 
-    def test_obs_to_dict(self):
-        df = file_content_to_dataframe(self.test_dataset)
-        result = obs_to_dict(df)
-        assert len(result['observations']) == 52
-        assert result['observations'][12] == {
-            'name': 'DE KOOY VK',
-            'lat': 52.926865008825,
-            'lon': 4.7811453228565,
-            'max_temperature_12h': 4.1,
-            'min_temperature_12h': -2.9,
-            'height': 1.22,
-            'air_temperature': 4.1,
-            'dew_point': -1.5,
-            'air_pressure': 1035.44,
-            'weather_code': 2.0,
-            'wind_direction': 300.4,
-            'wind_gust': 2.66,
-            'wind_gust_kph': 10,
-            'wind_speed': 1.77,
-            'wind_speed_bft': 2,
-        }
 
-
-class TestObservationDataBase:
+class TestObservationWriter:
     @pytest.fixture(autouse=True)
     def __around(self):
         with open('tests/data/KMDS__OPER_P___10M_OBS_L2_202103060830.nc', 'rb') as test_file:
             with mock.patch('app.dataset.read_api_key', return_value=''):
                 with mock.patch('app.knmi_obs.KnmiApi.get_latest_obs', return_value=test_file.read()):
-                    self.obs_data = ObservationData()
-                    self.obs_data.refresh()
-                    yield
+                    with mock.patch('app.dataset.DATABASE_PATH', ':memory:'):
+                        self.obs_data = ObservationWriter()
+                        yield
 
-    def test_refresh(self):
-        assert len(self.obs_data._obs_data) > 0
+    def test_ingest_latest_obs(self):
+        self.obs_data.ingest_latest_obs()
 
-    def test_all(self):
-        result = self.obs_data.all()
-        assert len(result) == 1
+
+class TestObservationReader:
+    @pytest.fixture(autouse=True)
+    def __around(self):
+        with Database(':memory:') as self.db:
+            self.de_bilt = Station(
+                id=6260,
+                name='De Bilt',
+                latitude=52.0,
+                longitude=6.0,
+                height=4.8
+            )
+
+            self.eindhoven = Station(
+                id=6370,
+                name='Eindhoven',
+                latitude=51.5,
+                longitude=6.5,
+                height=14.8
+            )
+            self.obs1 = Observation(
+                timestamp=1637180862,
+                station_id=6260,
+                air_temperature_2m=11.2,
+                dew_point=4.7,
+                wind_speed=2.4
+            )
+            self.obs2 = Observation(
+                timestamp=1637180962,
+                station_id=6260,
+                air_temperature_2m=11.5,
+                dew_point=4.9,
+                wind_speed=2.1
+            )
+            self.obs3 = Observation(
+                timestamp=1637180862,
+                station_id=6370,
+                air_temperature_2m=12.2,
+                dew_point=4.0,
+                wind_speed=1.4
+            )
+            self.obs4 = Observation(
+                timestamp=1637180962,
+                station_id=6370,
+                air_temperature_2m=13.2,
+                dew_point=4.2,
+                wind_speed=1.7
+            )
+            self.db.add_station(self.de_bilt)
+            self.db.add_station(self.eindhoven)
+            self.db.add_observations([self.obs1, self.obs2, self.obs3, self.obs4])
+            with mock.patch('app.database.Database.__enter__', self.db):
+                self.reader = ObservationReader()
+                yield
 
     def test_latest(self):
-        result = self.obs_data.latest()
-        assert result['timestamp'] == 1615019400000
+        result = self.reader.latest()
+        assert result == {
+            'timestamp': 1637180962000,
+            'observations': [
+                {
+                    'timestamp': 1637180962000,
+                    'station': {
+                        'id': 6260,
+                        'name': 'De Bilt',
+                        'latitude': 52.0,
+                        'longitude': 6.0,
+                        'height': 4.8,
+                    },
+                    'air_temperature_2m': 11.5,
+                    'dew_point': 4.9,
+                    'wind_speed': 2.1,
+                    'wind_speed_bft': 2,
+                    'wind_gust_kph': None,
+                },
+                {
+                    'timestamp': 1637180962000,
+                    'station': {
+                        'id': 6370,
+                        'name': 'Eindhoven',
+                        'latitude': 51.5,
+                        'longitude': 6.5,
+                        'height': 14.8,
+                    },
+                    'air_temperature_2m': 13.2,
+                    'dew_point': 4.2,
+                    'wind_speed': 1.7,
+                    'wind_speed_bft': 2,
+                    'wind_gust_kph': None,
+                },
+            ]
+
+        }
 
     def test_with_timestamp(self):
         result = self.obs_data.with_timestamp(1615019400000)

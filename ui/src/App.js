@@ -38,8 +38,7 @@ function App() {
       })
       .then(data => {
         if (data) {
-          console.log(data);
-          setObsData(data);
+          setObsData(data.observations);
           setTimestamp(data.timestamp);
         }
       })
@@ -71,10 +70,9 @@ function App() {
     return () => clearInterval(interval);
   }, [])
 
-  const getStationTimeseries = (stationName) => {
-    console.log(stationName)
+  const getStationTimeseries = (station) => {
     setGraphOpen(true);
-    const url = `/station?name=${stationName}`;
+    const url = `/station?id=${station.id}`;
     fetch(url)
       .then(response => {
         if (response.ok) {
@@ -82,17 +80,15 @@ function App() {
         }
       })
       .then(data => {
-        console.log(data);
         setTimeseriesData(data);
       })
       .catch((error) => {
-        console.log(error);
       });
   }
 
-  const onMarkerClick = (stationName) => {
-    setSelectedStation(stationName);
-    getStationTimeseries(stationName);
+  const onMarkerClick = (station) => {
+    setSelectedStation(station);
+    getStationTimeseries(station);
   }
 
   return (
@@ -135,9 +131,9 @@ function App() {
           </Grid>
           <Grid item xs={10}>
             <PigeonMap
-              observations={obsData.observations}
+              observations={obsData}
               element={selectedElement}
-              timestamp={obsData.timestamp}
+              timestamp={timestamp}
               onMarkerClick={onMarkerClick}
             />
           </Grid>

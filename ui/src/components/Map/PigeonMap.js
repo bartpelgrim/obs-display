@@ -22,11 +22,12 @@ const PigeonMap = (props) => {
           if (element.key === 'wind_direction') {
             return (
               <WindMarker
-                key={obs.name}
-                anchor={[obs.lat, obs.lon]}
+                key={obs.station.name}
+                anchor={[obs.station.latitude, obs.station.longitude]}
                 windDirection={obs[element.key]}
                 windSpeed={obs["wind_speed_bft"]}
                 onMarkerClick={onMarkerClick}
+                station={obs.station}
               >
               </WindMarker>
             );
@@ -34,12 +35,12 @@ const PigeonMap = (props) => {
           else {
             return (
               <PigeonMarker
-                key={obs.name}
-                anchor={[obs.lat, obs.lon]}
+                key={obs.station.name}
+                anchor={[obs.station.latitude, obs.station.longitude]}
                 value={obs[element.key]}
                 element={element}
                 onMarkerClick={onMarkerClick}
-                stationName={obs.name}
+                station={obs.station}
               />
             );
           }
@@ -48,7 +49,7 @@ const PigeonMap = (props) => {
       setDateTime(new Date(timestamp));
       setMarkers(newMarkers);
     }
-  }, [observations, element]);
+  }, [observations, timestamp, element]);
 
   return (
     <Map

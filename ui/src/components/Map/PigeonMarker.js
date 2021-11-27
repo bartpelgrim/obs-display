@@ -2,7 +2,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 
 export function PigeonMarker (props) {
-  const { left, top, style, onMarkerClick, value, element, children, stationName } = props;
+  const { left, top, style, onMarkerClick, value, element, children, station } = props;
 
   const calculateHslValue = (value) => {
     const hslMin = 300;
@@ -30,11 +30,11 @@ export function PigeonMarker (props) {
   }
 
   const onClick = () => {
-    onMarkerClick(stationName);
+    onMarkerClick(station);
   }
 
   return (
-    <Tooltip title={stationName}>
+    <Tooltip title={station.name}>
       <div style={{
         position: 'absolute',
         left: left - 20,

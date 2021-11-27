@@ -1,8 +1,8 @@
 export default function WindMarker(props) {
-  const { left, top, style, onMarkerClick, windDirection, windSpeed, children, stationName } = props;
+  const { left, top, style, onMarkerClick, windDirection, windSpeed, children, station } = props;
 
   const onClick = () => {
-    onMarkerClick(stationName);
+    onMarkerClick(station);
   }
 
   return (
