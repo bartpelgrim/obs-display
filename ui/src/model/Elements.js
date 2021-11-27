@@ -35,6 +35,34 @@ export const elementConfiguration = [
     unit: '°C'
   },
   {
+    key: "rain_amount_past_1h",
+    displayValue: "Precipitation past 1 hour",
+    lowerBound: 0,
+    upperBound: 50,
+    unit: 'mm'
+  },
+  {
+    key: "rain_amount_past_6h",
+    displayValue: "Precipitation past 6 hours",
+    lowerBound: 0,
+    upperBound: 50,
+    unit: 'mm'
+  },
+  {
+    key: "rain_amount_past_12h",
+    displayValue: "Precipitation past 12 hours",
+    lowerBound: 0,
+    upperBound: 50,
+    unit: 'mm'
+  },
+  {
+    key: "rain_amount_past_24h",
+    displayValue: "Precipitation past 24 hours",
+    lowerBound: 0,
+    upperBound: 50,
+    unit: 'mm'
+  },
+  {
     key: "weather_code",
     displayValue: "Weather Code",
     lowerBound: 0,
