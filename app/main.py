@@ -37,12 +37,13 @@ def get_obs():
 @app.route('/station')
 def get_station_timeseries():
     station_id_str = request.args.get('id')
+    history_hours = request.args.get('historyHours', 3)
     try:
         station_id = int(station_id_str)
     except ValueError:
         return f"Invalid station_id: {station_id_str}", 400
 
-    result = reader.timeseries(station_id, history_hours=1)
+    result = reader.timeseries(station_id, history_hours=history_hours)
 
     return json.dumps({'timeseries': result})
 
