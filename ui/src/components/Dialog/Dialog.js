@@ -9,8 +9,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
-import ElementMenu from '../SelectionMenu/ElementMenu'
-import Graph from '../Graph/Graph'
+import ElementMenu from '../SelectionMenu/ElementMenu';
+import HistoryMenu from '../SelectionMenu/HistoryMenu';
+import Graph from '../Graph/Graph';
 
 const styles = (theme) => ({
   root: {
@@ -47,8 +48,8 @@ const DialogContent = withStyles((theme) => ({
 
 
 export default function CustomDialog(props) {
-  const { selectedElement, setSelectedElement, selectedStation, elementConfiguration, timeseriesData, dialogOpen,
-    setDialogOpen } = props;
+  const { selectedElement, setSelectedElement, selectedHistory, setSelectedHistory, selectedStation,
+    elementConfiguration, timeseriesData, dialogOpen, setDialogOpen,  } = props;
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -70,6 +71,10 @@ export default function CustomDialog(props) {
           selectedElement={selectedElement}
           setSelectedElement={setSelectedElement}
           elementConfiguration={elementConfiguration}
+        />
+        <HistoryMenu
+          selectedHistory={selectedHistory}
+          setSelectedHistory={setSelectedHistory}
         />
         <Graph
           series={timeseriesData?.timeseries}

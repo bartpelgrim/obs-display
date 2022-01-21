@@ -15,6 +15,7 @@ function App() {
   const [timestamp, setTimestamp] = useState(null);
   const [selectedElement, setSelectedElement] = useState(elementConfiguration[1]);
   const [selectedStation, setSelectedStation] = useState(null);
+  const [selectedHistory, setSelectedHistory] = useState(3);
   const [graphOpen, setGraphOpen] = useState(false);
   const [error, setError] = useState(null);
 
@@ -71,8 +72,7 @@ function App() {
   }, [])
 
   const getStationTimeseries = (station) => {
-    setGraphOpen(true);
-    const url = `/station?id=${station.id}`;
+    const url = `/station?id=${station.id}&historyHours=${selectedHistory}`;
     fetch(url)
       .then(response => {
         if (response.ok) {
@@ -86,9 +86,15 @@ function App() {
       });
   }
 
+  useEffect(() => {
+    if (selectedStation) {
+      getStationTimeseries(selectedStation);
+    }
+  }, [selectedHistory, selectedStation]);
+
   const onMarkerClick = (station) => {
     setSelectedStation(station);
-    getStationTimeseries(station);
+    setGraphOpen(true);
   }
 
   return (
@@ -141,6 +147,8 @@ function App() {
         <CustomDialog
           selectedElement={selectedElement}
           setSelectedElement={setSelectedElement}
+          selectedHistory={selectedHistory}
+          setSelectedHistory={setSelectedHistory}
           elementConfiguration={elementConfiguration}
           selectedStation={selectedStation}
           timeseriesData={timeseriesData}
