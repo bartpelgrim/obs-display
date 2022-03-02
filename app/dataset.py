@@ -98,30 +98,31 @@ class ObservationWriter:
     def ingest_latest_obs(self):
         with Database(DATABASE_PATH) as db:
             file_content = self.api.get_latest_obs()
-            df = file_content_to_dataframe(file_content)
-            obs_list = []
-            timestamp = int(df.ta.index[0][1].timestamp())
-            if (latest_timestamp := db.get_latest_timestamp()) and latest_timestamp == timestamp:
-                print(f'timestep already in database: {datetime.fromtimestamp(timestamp).isoformat()}')
-                return
-            for row in df.itertuples():
-                station_id = int(row.Index[0])
-                station = Station(
-                    id=station_id,
-                    name=row.stationname,
-                    latitude=row.lat,
-                    longitude=row.lon,
-                    height=row.height,
-                )
-                db.add_station(station)
-                obs = Observation(
-                    timestamp=int(row.Index[1].timestamp()),
-                    station_id=station_id,
-                )
-                for element_name, mapping in mappings.items():
-                    setattr(obs, element_name, getattr(row, mapping.knmi_alias, None))
-                obs_list.append(obs)
-            db.add_observations(obs_list)
+            if file_content:
+                df = file_content_to_dataframe(file_content)
+                obs_list = []
+                timestamp = int(df.ta.index[0][1].timestamp())
+                if (latest_timestamp := db.get_latest_timestamp()) and latest_timestamp == timestamp:
+                    print(f'timestep already in database: {datetime.fromtimestamp(timestamp).isoformat()}')
+                    return
+                for row in df.itertuples():
+                    station_id = int(row.Index[0])
+                    station = Station(
+                        id=station_id,
+                        name=row.stationname,
+                        latitude=row.lat,
+                        longitude=row.lon,
+                        height=row.height,
+                    )
+                    db.add_station(station)
+                    obs = Observation(
+                        timestamp=int(row.Index[1].timestamp()),
+                        station_id=station_id,
+                    )
+                    for element_name, mapping in mappings.items():
+                        setattr(obs, element_name, getattr(row, mapping.knmi_alias, None))
+                    obs_list.append(obs)
+                db.add_observations(obs_list)
 
 
 class ObservationReader:

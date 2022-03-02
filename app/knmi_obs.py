@@ -55,8 +55,12 @@ class KnmiApi:
             raise ApiException(f'Unable to get observation file: {response.text}')
 
     def get_latest_obs(self) -> bytes:
-        latest_file = self._get_latest_file()
-        file_url = self._get_file_url(latest_file)
-        file_content = self._get_obs_file(file_url)
+        try:
+            latest_file = self._get_latest_file()
+            file_url = self._get_file_url(latest_file)
+            file_content = self._get_obs_file(file_url)
+            return file_content
+        except ConnectionError as exc:
+            print(f'Connection failed: {exc}')
+            return None
 
-        return file_content
