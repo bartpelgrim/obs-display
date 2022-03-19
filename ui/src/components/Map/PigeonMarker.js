@@ -50,7 +50,7 @@ export function PigeonMarker (props) {
         fontSize: 20,
         ...(style || {})
       }} onClick={onClick}>
-        {value.toFixed(1)}
+        {value.toFixed(element.precisionDigits)}
         {children}
       </div>
     </Tooltip>
