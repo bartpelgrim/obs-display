@@ -28,11 +28,25 @@ export const elementConfiguration = [
     unit: '°C'
   },
   {
+    key: "air_temperature_10cm_minimum_over_12h",
+    displayValue: "Minimum 10cm temperature past 12h",
+    lowerBound: -20,
+    upperBound: 40,
+    unit: '°C'
+  },
+  {
     key: "dew_point",
     displayValue: "Dew Point",
     lowerBound: -30,
     upperBound: 30,
     unit: '°C'
+  },
+  {
+    key: "relative_humidity",
+    displayValue: "Relative Humidity",
+    lowerBound: 0,
+    upperBound: 100,
+    unit: "%"
   },
   {
     key: "rain_amount_past_1h",
@@ -61,6 +75,13 @@ export const elementConfiguration = [
     lowerBound: 0,
     upperBound: 50,
     unit: 'mm'
+  },
+  {
+    key: "cloud_cover_total",
+    displayValue: "Total cloud cover",
+    lowerBound: 0,
+    upperBound: 8,
+    unit: "octa"
   },
   {
     key: "weather_code",
