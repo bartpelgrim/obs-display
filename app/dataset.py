@@ -146,7 +146,7 @@ class ObservationReader:
         return result
 
     def latest(self) -> Optional[dict]:
-        with Database(DATABASE_PATH, read=True) as db:
+        with Database(DATABASE_PATH) as db:
             latest_timestamp = db.get_latest_timestamp()
             latest_obs = db.get_observations_for_timestamp(latest_timestamp)
 
@@ -162,7 +162,7 @@ class ObservationReader:
             return result
 
     def with_timestamp(self, timestamp: int) -> Optional[dict]:
-        with Database(DATABASE_PATH, read=True) as db:
+        with Database(DATABASE_PATH) as db:
             obs = db.get_observations_for_timestamp(timestamp)
             if not obs:
                 return None
@@ -176,7 +176,7 @@ class ObservationReader:
             return result
 
     def timeseries(self, station_id: int, history_hours: int) -> List[dict]:
-        with Database(DATABASE_PATH, read=True) as db:
+        with Database(DATABASE_PATH) as db:
             start_timestamp = int((datetime.utcnow() - timedelta(hours=history_hours)).timestamp())
             obs = db.get_observations_for_station(station_id, start_timestamp)
 
