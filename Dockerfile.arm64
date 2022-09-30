@@ -23,6 +23,7 @@ COPY ui "$UI_DIR/"
 WORKDIR $UI_DIR
 RUN npm install
 #RUN npm audit fix
+RUN npx browserslist@latest --update-db
 RUN npm run build
 
 #COPY api_credentials.json $BUILD_DIR
