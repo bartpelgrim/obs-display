@@ -99,12 +99,12 @@ class Observation(Base):
 
 
 class Database:
-    def __init__(self, filepath, read=False):
+    def __init__(self, filepath):
         self.engine = create_engine(
             f'sqlite+pysqlite:///{filepath}',
             echo=False,
             future=True,
-            connect_args={"check_same_thread": read}
+            connect_args={"check_same_thread": False}
         )
         self.session = None
         Base.metadata.create_all(self.engine)
