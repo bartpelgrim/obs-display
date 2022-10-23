@@ -64,4 +64,7 @@ class KnmiApi:
         except requests.exceptions.ConnectionError as exc:
             print(f'Connection failed: {exc}')
             return None
+        except ApiException as exc:
+            print(f'Unable to access KNMI API: {exc}')
+            return None
 
