@@ -1,5 +1,7 @@
+from datetime import datetime
 from unittest import mock
 
+from freezegun import freeze_time
 import pytest
 
 from app.database import Database, Observation, Station
@@ -83,7 +85,7 @@ class TestObservationReader:
             self.db.add_station(self.de_bilt)
             self.db.add_station(self.eindhoven)
             self.db.add_observations([self.obs1, self.obs2, self.obs3, self.obs4])
-            with mock.patch('app.database.Database.__enter__', self.db):
+            with mock.patch('app.database.Database.__enter__', lambda _: self.db):
                 self.reader = ObservationReader()
                 yield
 
@@ -127,17 +129,19 @@ class TestObservationReader:
         }
 
     def test_with_timestamp(self):
-        result = self.obs_data.with_timestamp(1615019400000)
-        assert result['timestamp'] == 1615019400000
+        result = self.reader.with_timestamp(1637180962)
+        assert result['timestamp'] == 1637180962000
 
     def test_with_timestamp_returns_none(self):
-        assert self.obs_data.with_timestamp(1234) is None
+        assert self.reader.with_timestamp(1234) is None
 
     def test_timeseries(self):
-        result = self.obs_data.timeseries('AWG-1')
+        with freeze_time(datetime(2021, 11, 17, 22, 0)):
+            result = self.reader.timeseries(6260, 24)
         assert len(result) == 1
-        assert result[0]['name'] == 'AWG-1'
+        assert result[0]['name'] == 'De Bilt'
 
     def test_timeseries_returns_empty_list_with_unknown_station(self):
-        result = self.obs_data.timeseries('oops')
+        with freeze_time(datetime(2021, 11, 17, 22, 0)):
+            result = self.reader.timeseries(1234, 24)
         assert len(result) == 0

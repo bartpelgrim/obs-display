@@ -4,9 +4,8 @@ from io import BytesIO
 import json
 import os
 import time
-from typing import Dict, Optional, List
+from typing import Optional
 
-import numpy as np
 import pandas
 from xarray import open_dataset
 
@@ -134,7 +133,7 @@ class ObservationReader:
         }
 
     @staticmethod
-    def _post_process_obs(obs: List[Observation]) -> List[dict]:
+    def _post_process_obs(obs: list[Observation]) -> list[dict]:
         result = []
         for o in obs:
             obs_dict = o.to_dict()
@@ -175,7 +174,7 @@ class ObservationReader:
 
             return result
 
-    def timeseries(self, station_id: int, history_hours: int) -> List[dict]:
+    def timeseries(self, station_id: int, history_hours: int) -> list[dict]:
         with Database(DATABASE_PATH) as db:
             start_timestamp = int((datetime.utcnow() - timedelta(hours=history_hours)).timestamp())
             obs = db.get_observations_for_station(station_id, start_timestamp)
