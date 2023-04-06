@@ -1,5 +1,5 @@
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 export default function HistoryMenu(props) {
   const { selectedHistory, setSelectedHistory } = props;

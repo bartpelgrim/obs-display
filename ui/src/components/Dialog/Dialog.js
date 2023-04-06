@@ -1,51 +1,48 @@
-// Modified from https://material-ui.com/components/dialogs/  "Customized Dialogs"
+// Modified from https://mui.com/material-ui/react-dialog/#customization "Customized Dialogs"
 
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ElementMenu from '../SelectionMenu/ElementMenu';
 import HistoryMenu from '../SelectionMenu/HistoryMenu';
 import Graph from '../Graph/Graph';
 
-const styles = (theme) => ({
-  root: {
-    margin: 0,
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
   },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
   },
-});
+}));
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
   return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
-
-const DialogContent = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiDialogContent);
-
+      <DialogTitle sx={{m: 0, p:2}} {...other}>
+        {children}
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: 'absolute' ,
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </DialogTitle>
+  )
+}
 
 export default function CustomDialog(props) {
   const { selectedElement, setSelectedElement, selectedHistory, setSelectedHistory, selectedStation,
@@ -57,16 +54,16 @@ export default function CustomDialog(props) {
 
   return (
     <div>
-      <Dialog
+      <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={dialogOpen}
         fullWidth
         maxWidth={'md'}
       >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           {selectedStation?.name}
-        </DialogTitle>
+        </BootstrapDialogTitle>
         <ElementMenu
           selectedElement={selectedElement}
           setSelectedElement={setSelectedElement}
@@ -80,7 +77,7 @@ export default function CustomDialog(props) {
           series={timeseriesData?.timeseries}
           element={selectedElement}
         />
-      </Dialog>
+      </BootstrapDialog>
     </div>
   );
 }

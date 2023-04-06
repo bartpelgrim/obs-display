@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@material-ui/core/Grid'
+import Grid from '@mui/material/Grid';
 import PigeonMap from './components/Map/PigeonMap.js'
 import { elementConfiguration } from './model/Elements'
 import { ErrorSnackbar } from './components/Alerts/Alert'

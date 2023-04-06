@@ -1,9 +1,5 @@
-import Snackbar from '@material-ui/core/Snackbar'
-import MuiAlert from '@material-ui/lab/Alert';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export function ErrorSnackbar (props) {
   const { error, setError } = props;
@@ -16,11 +12,13 @@ export function ErrorSnackbar (props) {
     return (
       <Snackbar
         open={!!error}
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
         autoHideDuration={5000}
         onClose={onClose}
       >
         <Alert
-          severity="error"
+          variant='filled'
+          severity='error'
           onClose={onClose}
         >
           {error}
