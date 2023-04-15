@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import PigeonMap from './components/Map/PigeonMap.js'
 import { elementConfiguration } from './model/Elements'
 import { ErrorSnackbar } from './components/Alerts/Alert'
@@ -8,6 +9,8 @@ import TimeButtonGroup from './components/TimeButtonGrid/TimeButtonGroup'
 import CustomDialog from './components/Dialog/Dialog'
 
 import './App.css';
+import {ThemeProvider} from "@mui/material";
+import { theme } from "./Theme";
 
 function App() {
   const [obsData, setObsData] = useState([]);
@@ -98,8 +101,8 @@ function App() {
   }
 
   return (
-    <Grid className="App">
-      <header className="App-header">
+    <ThemeProvider theme={theme}>
+      <Paper>
         <ErrorSnackbar
           error={error}
           setError={setError}
@@ -135,7 +138,7 @@ function App() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} sx={{fontSize: '3vh'}}>
             <PigeonMap
               observations={obsData}
               element={selectedElement}
@@ -155,8 +158,8 @@ function App() {
           dialogOpen={graphOpen}
           setDialogOpen={setGraphOpen}
         />
-      </header>
-    </Grid>
+      </Paper>
+    </ThemeProvider>
   );
 }
 
