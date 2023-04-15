@@ -22,6 +22,11 @@ export const theme = createTheme({
           margin: 5,
         }
       }
+    },
+    MuiIconButton: {
+      defaultProps: {
+        color: "primary",
+      }
     }
   }
 });
