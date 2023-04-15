@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import BasePaper from "./components/Paper/BasePaper";
 import PigeonMap from './components/Map/PigeonMap.js'
 import { elementConfiguration } from './model/Elements'
 import { ErrorSnackbar } from './components/Alerts/Alert'
@@ -102,7 +102,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Paper>
+      <BasePaper>
         <ErrorSnackbar
           error={error}
           setError={setError}
@@ -158,7 +158,7 @@ function App() {
           dialogOpen={graphOpen}
           setDialogOpen={setGraphOpen}
         />
-      </Paper>
+      </BasePaper>
     </ThemeProvider>
   );
 }

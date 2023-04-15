@@ -5,17 +5,6 @@ export const theme = createTheme({
     mode: 'dark',
   },
   components: {
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          textAlign: 'center',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }
-      }
-    },
     MuiButtonGroup: {
       styleOverrides: {
         root: {
