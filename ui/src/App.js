@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import BasePaper from "./components/Paper/BasePaper";
-import PigeonMap from './components/Map/PigeonMap.js'
-import { elementConfiguration } from './model/Elements'
-import { ErrorSnackbar } from './components/Alerts/Alert'
-import ElementMenu from './components/SelectionMenu/ElementMenu'
-import TimeButtonGroup from './components/TimeButtonGrid/TimeButtonGroup'
-import CustomDialog from './components/Dialog/Dialog'
+import PigeonMap from './components/Map/PigeonMap.js';
+import { elementConfiguration } from './model/Elements';
+import { ErrorSnackbar } from './components/Alerts/Alert';
+import Sidebar from "./components/Sidebar/Sidebar";
+import CustomDialog from './components/Dialog/Dialog';
 
 import './App.css';
 import {ThemeProvider} from "@mui/material";
@@ -122,37 +121,14 @@ function App() {
           display={"flex"}
         >
           <Grid item xs={2}>
-            <Grid
-              container
-              direction={"column"}
-              justify={"center"}
-              alignItems={"center"}
-              display={"flex"}
-            >
-              <Grid item xs={3} sx={{fontSize: '2vh', margin: 3}}>
-                Controls
-              </Grid>
-              <Grid item xs={3}>
-                Selected element:
-              </Grid>
-              <Grid item xs={3}>
-                <ElementMenu
-                  selectedElement={selectedElement}
-                  setSelectedElement={setSelectedElement}
-                  elementConfiguration={elementConfiguration}
-                />
-              </Grid>
-              <Grid item xs={3} paddingTop={2}>
-                {dateTime?.toLocaleTimeString() ?? "No data available"}
-              </Grid>
-              <Grid item xs={3}>
-                <TimeButtonGroup
-                  backButtonAction={back10Minutes}
-                  forwardButtonAction={forward10Minutes}
-                  latestButtonAction={getLatestObs}
-                />
-              </Grid>
-            </Grid>
+            <Sidebar
+              selectedElement={selectedElement}
+              setSelectedElement={setSelectedElement}
+              dateTime={dateTime}
+              back10Minutes={back10Minutes}
+              forward10Minutes={forward10Minutes}
+              getLatestObs={getLatestObs}
+            />
           </Grid>
           <Grid item xs={10} sx={{fontSize: '3vh'}}>
             <PigeonMap
