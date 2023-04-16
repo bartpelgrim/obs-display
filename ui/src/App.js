@@ -129,12 +129,21 @@ function App() {
               alignItems={"center"}
               display={"flex"}
             >
+              <Grid item xs={3} sx={{fontSize: '2vh', margin: 3}}>
+                Controls
+              </Grid>
+              <Grid item xs={3}>
+                Selected element:
+              </Grid>
               <Grid item xs={3}>
                 <ElementMenu
                   selectedElement={selectedElement}
                   setSelectedElement={setSelectedElement}
                   elementConfiguration={elementConfiguration}
                 />
+              </Grid>
+              <Grid item xs={3} paddingTop={2}>
+                {dateTime?.toLocaleTimeString() ?? "No data available"}
               </Grid>
               <Grid item xs={3}>
                 <TimeButtonGroup
