@@ -9,11 +9,10 @@ function mapTilerProvider(x, y, z) {
 }
 
 const PigeonMap = (props) => {
-  const { observations, element, timestamp, onMarkerClick } = props;
+  const { observations, element, dateTime, onMarkerClick } = props;
   const [center, setCenter] = useState([52.3, 5.2]);
   const [zoom, setZoom] = useState(8);
   const [markers, setMarkers] = useState(null);
-  const [dateTime, setDateTime] = useState(null);
 
   useEffect(() => {
     if (observations) {
@@ -46,10 +45,9 @@ const PigeonMap = (props) => {
           }
         }
       });
-      setDateTime(new Date(timestamp));
       setMarkers(newMarkers);
     }
-  }, [observations, timestamp, element]);
+  }, [observations, dateTime, element]);
 
   return (
     <Map
@@ -60,7 +58,7 @@ const PigeonMap = (props) => {
       onBoundsChanged={({ center, zoom }) => { setCenter(center); setZoom(zoom) }}
     >
       {markers}
-      {element.displayValue} {dateTime == null ? "" : dateTime.toLocaleString()}
+      {element.displayValue} {dateTime?.toLocaleString() ?? ""}
     </Map>
   );
 };

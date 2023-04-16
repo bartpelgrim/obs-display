@@ -16,6 +16,7 @@ function App() {
   const [obsData, setObsData] = useState([]);
   const [timeseriesData, setTimeseriesData] = useState(null);
   const [timestamp, setTimestamp] = useState(null);
+  const [dateTime, setDateTime] = useState(null);
   const [selectedElement, setSelectedElement] = useState(elementConfiguration[1]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [selectedHistory, setSelectedHistory] = useState(3);
@@ -95,6 +96,12 @@ function App() {
     }
   }, [selectedHistory, selectedStation]);
 
+  useEffect(() => {
+    if (timestamp) {
+      setDateTime(new Date(timestamp));
+    }
+  }, [timestamp])
+
   const onMarkerClick = (station) => {
     setSelectedStation(station);
     setGraphOpen(true);
@@ -142,7 +149,7 @@ function App() {
             <PigeonMap
               observations={obsData}
               element={selectedElement}
-              timestamp={timestamp}
+              dateTime={dateTime}
               onMarkerClick={onMarkerClick}
             />
           </Grid>
