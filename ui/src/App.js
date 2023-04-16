@@ -44,6 +44,7 @@ function App() {
         if (data) {
           setObsData(data.observations);
           setTimestamp(data.timestamp);
+          setDateTime(new Date(data.timestamp));
         }
       })
       .catch((error) => {
@@ -94,12 +95,6 @@ function App() {
       getStationTimeseries(selectedStation);
     }
   }, [selectedHistory, selectedStation]);
-
-  useEffect(() => {
-    if (timestamp) {
-      setDateTime(new Date(timestamp));
-    }
-  }, [timestamp])
 
   const onMarkerClick = (station) => {
     setSelectedStation(station);
