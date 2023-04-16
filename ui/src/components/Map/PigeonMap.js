@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 import { PigeonMarker } from './PigeonMarker.js'
 import WindMarker from '../WindMarker/WindMarker.js'
+import { TimeOptions } from "../../model/Time";
 
 function mapTilerProvider(x, y, z) {
   return `https://c.tile.openstreetmap.org/${z}/${x}/${y}.png`
@@ -58,7 +59,7 @@ const PigeonMap = (props) => {
       onBoundsChanged={({ center, zoom }) => { setCenter(center); setZoom(zoom) }}
     >
       {markers}
-      {element.displayValue} {dateTime?.toLocaleString() ?? ""}
+      {element.displayValue} {dateTime?.toLocaleString([], TimeOptions) ?? ""}
     </Map>
   );
 };

@@ -2,6 +2,7 @@ import Grid from "@mui/material/Grid";
 import ElementMenu from "../SelectionMenu/ElementMenu";
 import { elementConfiguration } from "../../model/Elements";
 import TimeButtonGroup from "../TimeButtonGrid/TimeButtonGroup";
+import { TimeOptions } from "../../model/Time";
 import React from "react";
 
 export default function Sidebar(props) {
@@ -29,7 +30,7 @@ export default function Sidebar(props) {
         />
       </Grid>
       <Grid item xs={3} paddingTop={2}>
-        {dateTime?.toLocaleTimeString() ?? "No data available"}
+        {dateTime?.toLocaleTimeString([], TimeOptions) ?? "No data available"}
       </Grid>
       <Grid item xs={3}>
         <TimeButtonGroup
