@@ -51,7 +51,7 @@ const PigeonMap = (props) => {
 
   return (
     <Map
-      height={1000}
+      height={"90vh"}
       provider={mapTilerProvider}
       center={center}
       zoom={zoom}
