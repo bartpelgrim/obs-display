@@ -140,7 +140,7 @@ export const elementConfiguration = [
     displayValue: "Wind Gust km/h",
     lowerBound: 0,
     upperBound: 120,
-    precisionDigits: 1,
+    precisionDigits: 0,
     unit: 'km/h'
   },
 ];

@@ -1,5 +1,26 @@
+import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 
+
+function getFontSize(element, value) {
+  const absValue = Math.abs(value);
+  if (absValue < 10.0) {
+    return 20;
+  }
+  else if (absValue < 100.0) {
+    if (element.precisionDigits === 0) {
+      return 20;
+    } else {
+      return 18;
+    }
+  }
+  else if (absValue < 1000.0) {
+    if (element.precisionDigits === 0) {
+      return 18;
+    }
+  }
+  return 16;
+}
 
 export function PigeonMarker (props) {
   const { left, top, style, onMarkerClick, value, element, children, station } = props;
@@ -35,24 +56,22 @@ export function PigeonMarker (props) {
 
   return (
     <Tooltip title={station.name}>
-      <div style={{
-        position: 'absolute',
-        left: left - 20,
-        top: top - 20,
-        width: 40,
-        height: 40,
-        borderTopLeftRadius: '100%',
-        borderTopRightRadius: '100%',
-        borderBottomLeftRadius: '100%',
-        borderBottomRightRadius: '100%',
-        background: `hsl(${calculateHslValue(value)}, 100%, 50%)`,
-        color: 'black',
-        fontSize: 20,
-        ...(style || {})
-      }} onClick={onClick}>
+      <Avatar
+        sx={{
+          position: 'absolute',
+          left: left - 20,
+          top: top - 20,
+          width: 40,
+          height: 40,
+          background: `hsl(${calculateHslValue(value)}, 100%, 50%)`,
+          color: 'black',
+          fontSize: getFontSize(element, value)
+        }}
+        onClick={onClick}
+      >
         {value.toFixed(element.precisionDigits)}
         {children}
-      </div>
+      </Avatar>
     </Tooltip>
   );
 }
