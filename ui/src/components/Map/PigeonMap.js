@@ -1,4 +1,4 @@
-import { Map } from 'pigeon-maps'
+import { Map, Overlay } from 'pigeon-maps'
 import { useState, useEffect } from 'react'
 
 import { PigeonMarker } from './PigeonMarker.js'
@@ -9,7 +9,15 @@ function mapTilerProvider(x, y, z) {
   return `https://c.tile.openstreetmap.org/${z}/${x}/${y}.png`
 }
 
-const PigeonMap = (props) => {
+function KnmiAttribution() {
+  return (
+    <>
+      Data provided by <a href="https://www.knmi.nl">KNMI</a>
+    </>
+  );
+}
+
+function PigeonMap(props) {
   const { observations, element, dateTime, onMarkerClick } = props;
   const [center, setCenter] = useState([52.3, 5.2]);
   const [zoom, setZoom] = useState(8);
@@ -57,11 +65,12 @@ const PigeonMap = (props) => {
       center={center}
       zoom={zoom}
       onBoundsChanged={({ center, zoom }) => { setCenter(center); setZoom(zoom) }}
+      attributionPrefix={<KnmiAttribution />}
     >
       {markers}
       {element.displayValue} {dateTime?.toLocaleString([], TimeOptions) ?? ""}
     </Map>
   );
-};
+}
 
 export default PigeonMap;
