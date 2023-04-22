@@ -115,7 +115,7 @@ function App() {
           alignItems={"center"}
           display={"flex"}
         >
-          <Grid item xs={2}>
+          <Grid item xs={6} md={5} lg={4} xl={2.5}>
             <Sidebar
               selectedElement={selectedElement}
               setSelectedElement={setSelectedElement}
@@ -125,7 +125,7 @@ function App() {
               getLatestObs={getLatestObs}
             />
           </Grid>
-          <Grid item xs={10} sx={{fontSize: '3vh'}}>
+          <Grid item xs={6} md={7} lg={8} xl={9.5} sx={{fontSize: '3vh'}}>
             <PigeonMap
               observations={obsData}
               element={selectedElement}

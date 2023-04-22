@@ -33,7 +33,7 @@ export const elementConfiguration = [
   },
   {
     key: "air_temperature_10cm_minimum_over_12h",
-    displayValue: "Minimum 10cm temperature past 12h",
+    displayValue: "Minimum 10cm temp past 12h",
     lowerBound: -20,
     upperBound: 40,
     precisionDigits: 1,
