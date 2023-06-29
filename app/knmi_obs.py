@@ -61,10 +61,12 @@ class KnmiApi:
             file_url = self._get_file_url(latest_file)
             file_content = self._get_obs_file(file_url)
             return file_content
-        except requests.exceptions.ConnectionError as exc:
-            print(f'Connection failed: {exc}')
-            return None
         except ApiException as exc:
             print(f'Unable to access KNMI API: {exc}')
             return None
+        except requests.exceptions.ConnectionError as exc:
+            print(f'Connection failed: {exc}')
+            return None
+        except Exception as exc:
+            print(f'Caught exception: {exc}')
 
