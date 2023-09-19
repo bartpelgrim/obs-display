@@ -1,4 +1,4 @@
-from typing import List, Optional
+from pathlib import Path
 
 from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, select
 from sqlalchemy.orm import Session, relationship
@@ -99,62 +99,67 @@ class Observation(Base):
 
 
 class Database:
-    def __init__(self, filepath):
+    def __init__(self, filepath: str):
+        self.db_path = Path(filepath)
         self.engine = create_engine(
             f'sqlite+pysqlite:///{filepath}',
             echo=False,
             future=True,
             connect_args={"check_same_thread": False}
         )
-        self.session = None
-        Base.metadata.create_all(self.engine)
+        self._create_db_if_not_exist()
 
-    def __enter__(self):
-        with Session(self.engine) as self.session:
-            return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+    def _create_db_if_not_exist(self):
+        if not self.db_path.exists():
+            print(f'creating new database at {str(self.db_path)}')
+            Base.metadata.create_all(self.engine)
 
     def add_station(self, station: Station):
         # check if station already exists
-        statement = select(Station).where(Station.id == station.id)
-        result = self.session.execute(statement).first()
-        if not result:
-            self.session.add(station)
-            self.session.commit()
+        with Session(self.engine) as session:
+            statement = select(Station).where(Station.id == station.id)
+            result = session.execute(statement).first()
+            if not result:
+                session.add(station)
+                session.commit()
 
-    def get_station_by_id(self, station_id: int) -> Station:
-        return self.session.get(Station, station_id)
+    def get_station_by_id(self, station_id: int) -> Station | None:
+        with Session(self.engine) as session:
+            return session.get(Station, station_id)
 
-    def get_all_stations(self) -> List[Station]:
+    def get_all_stations(self) -> list[Station]:
         statement = select(Station)
-        result = self.session.execute(statement).all()
+        with Session(self.engine) as session:
+            result = session.execute(statement).all()
         return [row.Station for row in result]
 
-    def add_observations(self, observations: List[Observation]):
-        for obs in observations:
-            self.session.add(obs)
-        self.session.commit()
+    def add_observations(self, observations: list[Observation]):
+        with Session(self.engine) as session:
+            for obs in observations:
+                session.add(obs)
+            session.commit()
 
-    def get_observations_for_station(self, station_id: int, start_timestamp: int) -> List[Observation]:
+    def get_observations_for_station(self, station_id: int, start_timestamp: int) -> list[dict]:
         statement = select(Observation).where(Observation.station_id == station_id)\
             .where(Observation.timestamp > start_timestamp)\
             .order_by(Observation.timestamp)
-        result = self.session.execute(statement).all()
-        return [row.Observation for row in result]
+        with Session(self.engine) as session:
+            result = session.execute(statement).all()
+            return [row.Observation.to_dict() for row in result]
 
-    def get_latest_timestamp(self) -> Optional[int]:
+    def get_latest_timestamp(self) -> int | None:
         statement = select(Observation.timestamp).order_by(Observation.timestamp.desc()).limit(1)
-        row = self.session.execute(statement).first()
+        with Session(self.engine) as session:
+            row = session.execute(statement).first()
         if row:
             return row.timestamp
         return None
 
-    def get_observations_for_timestamp(self, timestamp: int) -> List[Observation]:
+    def get_observations_for_timestamp(self, timestamp: int) -> list[dict]:
         statement = select(Observation).\
             where(Observation.timestamp == timestamp).\
             order_by(Observation.timestamp).\
             join(Station)
-        result = self.session.execute(statement).all()
-        return [row.Observation for row in result]
+        with Session(self.engine) as session:
+            result = session.execute(statement).all()
+            return [row.Observation.to_dict() for row in result]

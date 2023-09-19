@@ -38,59 +38,63 @@ class TestObservationWriter:
 class TestObservationReader:
     @pytest.fixture(autouse=True)
     def __around(self):
-        with Database(':memory:') as self.db:
-            self.de_bilt = Station(
-                id=6260,
-                name='De Bilt',
-                latitude=52.0,
-                longitude=6.0,
-                height=4.8
-            )
+        self.db = Database(':memory:')
+        self.de_bilt = Station(
+            id=6260,
+            name='De Bilt',
+            latitude=52.0,
+            longitude=6.0,
+            height=4.8
+        )
 
-            self.eindhoven = Station(
-                id=6370,
-                name='Eindhoven',
-                latitude=51.5,
-                longitude=6.5,
-                height=14.8
-            )
-            self.obs1 = Observation(
-                timestamp=1637180862,
-                station_id=6260,
-                air_temperature_2m=11.2,
-                dew_point=4.7,
-                wind_speed=2.4
-            )
-            self.obs2 = Observation(
-                timestamp=1637180962,
-                station_id=6260,
-                air_temperature_2m=11.5,
-                dew_point=4.9,
-                wind_speed=2.1
-            )
-            self.obs3 = Observation(
-                timestamp=1637180862,
-                station_id=6370,
-                air_temperature_2m=12.2,
-                dew_point=4.0,
-                wind_speed=1.4
-            )
-            self.obs4 = Observation(
-                timestamp=1637180962,
-                station_id=6370,
-                air_temperature_2m=13.2,
-                dew_point=4.2,
-                wind_speed=1.7
-            )
-            self.db.add_station(self.de_bilt)
-            self.db.add_station(self.eindhoven)
-            self.db.add_observations([self.obs1, self.obs2, self.obs3, self.obs4])
-            with mock.patch('app.database.Database.__enter__', lambda _: self.db):
-                self.reader = ObservationReader()
-                yield
+        self.eindhoven = Station(
+            id=6370,
+            name='Eindhoven',
+            latitude=51.5,
+            longitude=6.5,
+            height=14.8
+        )
+        self.obs1 = Observation(
+            timestamp=1637180862,
+            station_id=6260,
+            air_temperature_2m=11.2,
+            dew_point=4.7,
+            wind_speed=2.4
+        )
+        self.obs2 = Observation(
+            timestamp=1637180962,
+            station_id=6260,
+            air_temperature_2m=11.5,
+            dew_point=4.9,
+            wind_speed=2.1
+        )
+        self.obs3 = Observation(
+            timestamp=1637180862,
+            station_id=6370,
+            air_temperature_2m=12.2,
+            dew_point=4.0,
+            wind_speed=1.4
+        )
+        self.obs4 = Observation(
+            timestamp=1637180962,
+            station_id=6370,
+            air_temperature_2m=13.2,
+            dew_point=4.2,
+            wind_speed=1.7
+        )
+        self.db.add_station(self.de_bilt)
+        self.db.add_station(self.eindhoven)
+        self.db.add_observations([self.obs1, self.obs2, self.obs3, self.obs4])
+        self.reader = ObservationReader()
+        self.reader.db = self.db
 
     def test_latest(self):
         result = self.reader.latest()
+        for obs in result['observations']:
+            empty_elements = [element for element, value in obs.items() if value is None]
+            for e in empty_elements:
+                obs.pop(e)
+
         assert result == {
             'timestamp': 1637180962000,
             'observations': [
@@ -103,11 +107,11 @@ class TestObservationReader:
                         'longitude': 6.0,
                         'height': 4.8,
                     },
+                    'station_id': 6260,
                     'air_temperature_2m': 11.5,
                     'dew_point': 4.9,
                     'wind_speed': 2.1,
                     'wind_speed_bft': 2,
-                    'wind_gust_kph': None,
                 },
                 {
                     'timestamp': 1637180962000,
@@ -118,11 +122,11 @@ class TestObservationReader:
                         'longitude': 6.5,
                         'height': 14.8,
                     },
+                    'station_id': 6370,
                     'air_temperature_2m': 13.2,
                     'dew_point': 4.2,
                     'wind_speed': 1.7,
                     'wind_speed_bft': 2,
-                    'wind_gust_kph': None,
                 },
             ]
 
@@ -138,8 +142,8 @@ class TestObservationReader:
     def test_timeseries(self):
         with freeze_time(datetime(2021, 11, 17, 22, 0)):
             result = self.reader.timeseries(6260, 24)
-        assert len(result) == 1
-        assert result[0]['name'] == 'De Bilt'
+        assert len(result) == 2
+        assert result[0]['station']['name'] == 'De Bilt'
 
     def test_timeseries_returns_empty_list_with_unknown_station(self):
         with freeze_time(datetime(2021, 11, 17, 22, 0)):

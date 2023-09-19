@@ -4,7 +4,6 @@ from io import BytesIO
 import json
 import os
 import time
-from typing import Optional
 
 import pandas
 from xarray import open_dataset
@@ -14,7 +13,7 @@ from app.database import Database, Observation, Station
 from app.knmi_obs import KnmiApi
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-DATABASE_PATH = os.path.join(DIR_PATH, 'obs.db')
+DATABASE_PATH = os.path.join(DIR_PATH, '..', 'obs.db')
 
 
 def read_api_key() -> str:
@@ -88,6 +87,7 @@ class ObservationWriter:
     def __init__(self):
         api_key = read_api_key()
         self.api = KnmiApi(api_key)
+        self.db = Database(DATABASE_PATH)
 
     def run(self):
         while True:
@@ -95,36 +95,38 @@ class ObservationWriter:
             time.sleep(self.UPDATE_INTERVAL_SECONDS)
 
     def ingest_latest_obs(self):
-        with Database(DATABASE_PATH) as db:
-            file_content = self.api.get_latest_obs()
-            if file_content:
-                df = file_content_to_dataframe(file_content)
-                obs_list = []
-                timestamp = int(df.ta.index[0][1].timestamp())
-                if (latest_timestamp := db.get_latest_timestamp()) and latest_timestamp == timestamp:
-                    print(f'timestep already in database: {datetime.fromtimestamp(timestamp).isoformat()}')
-                    return
-                for row in df.itertuples():
-                    station_id = int(row.Index[0])
-                    station = Station(
-                        id=station_id,
-                        name=row.stationname,
-                        latitude=row.lat,
-                        longitude=row.lon,
-                        height=row.height,
-                    )
-                    db.add_station(station)
-                    obs = Observation(
-                        timestamp=int(row.Index[1].timestamp()),
-                        station_id=station_id,
-                    )
-                    for element_name, mapping in mappings.items():
-                        setattr(obs, element_name, getattr(row, mapping.knmi_alias, None))
-                    obs_list.append(obs)
-                db.add_observations(obs_list)
+        file_content = self.api.get_latest_obs()
+        if file_content:
+            df = file_content_to_dataframe(file_content)
+            obs_list = []
+            timestamp = int(df.ta.index[0][1].timestamp())
+            if (latest_timestamp := self.db.get_latest_timestamp()) and latest_timestamp == timestamp:
+                print(f'timestep already in database: {datetime.fromtimestamp(timestamp).isoformat()}')
+                return
+            for row in df.itertuples():
+                station_id = int(row.Index[0])
+                station = Station(
+                    id=station_id,
+                    name=row.stationname,
+                    latitude=row.lat,
+                    longitude=row.lon,
+                    height=row.height,
+                )
+                self.db.add_station(station)
+                obs = Observation(
+                    timestamp=int(row.Index[1].timestamp()),
+                    station_id=station_id,
+                )
+                for element_name, mapping in mappings.items():
+                    setattr(obs, element_name, getattr(row, mapping.knmi_alias, None))
+                obs_list.append(obs)
+            self.db.add_observations(obs_list)
 
 
 class ObservationReader:
+    def __init__(self):
+        self.db = Database(DATABASE_PATH)
+
     @staticmethod
     def _calculate_alternative_units(obs_dict: dict):
         return {
@@ -133,51 +135,47 @@ class ObservationReader:
         }
 
     @staticmethod
-    def _post_process_obs(obs: list[Observation]) -> list[dict]:
+    def _post_process_obs(obs: list[dict]) -> list[dict]:
         result = []
         for o in obs:
-            obs_dict = o.to_dict()
-            obs_dict['timestamp'] = obs_dict['timestamp'] * 1000  # from python to javascript timestamp
-            obs_dict['wind_speed_bft'] = mps_to_bft(obs_dict.get('wind_speed'))
-            obs_dict['wind_gust_kph'] = mps_to_kph(obs_dict.get('wind_gust'))
-            result.append(obs_dict)
+            o['timestamp'] = o['timestamp'] * 1000  # from python to javascript timestamp
+            o['wind_speed_bft'] = mps_to_bft(o.get('wind_speed'))
+            o['wind_gust_kph'] = mps_to_kph(o.get('wind_gust'))
+            result.append(o)
 
         return result
 
-    def latest(self) -> Optional[dict]:
-        with Database(DATABASE_PATH) as db:
-            latest_timestamp = db.get_latest_timestamp()
-            latest_obs = db.get_observations_for_timestamp(latest_timestamp)
+    def latest(self) -> dict | None:
+        latest_timestamp = self.db.get_latest_timestamp()
+        latest_obs = self.db.get_observations_for_timestamp(latest_timestamp)
 
-            if not latest_obs:
-                return None
+        if not latest_obs:
+            return None
 
-            obs_list = self._post_process_obs(latest_obs)
-            result = {
-                'timestamp': latest_timestamp * 1000,  # from python to javascript timestamp
-                'observations': obs_list,
-            }
+        obs_list = self._post_process_obs(latest_obs)
+        result = {
+            'timestamp': latest_timestamp * 1000,  # from python to javascript timestamp
+            'observations': obs_list,
+        }
 
-            return result
+        return result
 
-    def with_timestamp(self, timestamp: int) -> Optional[dict]:
-        with Database(DATABASE_PATH) as db:
-            obs = db.get_observations_for_timestamp(timestamp)
-            if not obs:
-                return None
+    def with_timestamp(self, timestamp: int) -> dict | None:
+        obs = self.db.get_observations_for_timestamp(timestamp)
+        if not obs:
+            return None
 
-            obs_list = self._post_process_obs(obs)
-            result = {
-                'timestamp': timestamp * 1000,  # from python to javascript timestamp
-                'observations': obs_list,
-            }
+        obs_list = self._post_process_obs(obs)
+        result = {
+            'timestamp': timestamp * 1000,  # from python to javascript timestamp
+            'observations': obs_list,
+        }
 
-            return result
+        return result
 
     def timeseries(self, station_id: int, history_hours: int) -> list[dict]:
-        with Database(DATABASE_PATH) as db:
-            start_timestamp = int((datetime.utcnow() - timedelta(hours=history_hours)).timestamp())
-            obs = db.get_observations_for_station(station_id, start_timestamp)
+        start_timestamp = int((datetime.utcnow() - timedelta(hours=history_hours)).timestamp())
+        obs = self.db.get_observations_for_station(station_id, start_timestamp)
 
         obs_list = self._post_process_obs(obs)
 
