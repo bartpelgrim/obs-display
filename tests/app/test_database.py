@@ -98,3 +98,10 @@ class TestDatabase:
         assert obs_dict['air_temperature_2m'] == 11.5
         assert obs_dict['station']['name'] == 'De Bilt'
 
+    def test_delete_observations_before_timestamp_between_timestamps(self):
+        deleted_row_count = self.db.delete_observations_before_timestamp(1637180900)
+        assert deleted_row_count == 2
+
+    def test_delete_observations_before_timestamp_before_timestamps_deletes_nothing(self):
+        deleted_row_count = self.db.delete_observations_before_timestamp(1637180800)
+        assert deleted_row_count == 0

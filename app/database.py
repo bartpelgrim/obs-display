@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, select
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, select, delete
 from sqlalchemy.orm import Session, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -163,3 +163,10 @@ class Database:
         with Session(self.engine) as session:
             result = session.execute(statement).all()
             return [row.Observation.to_dict() for row in result]
+
+    def delete_observations_before_timestamp(self, timestamp: int) -> int:
+        statement = delete(Observation).where(Observation.timestamp < timestamp)
+        with Session(self.engine) as session:
+            result = session.execute(statement)
+            deleted_row_count = result.rowcount
+        return deleted_row_count

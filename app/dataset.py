@@ -8,6 +8,7 @@ import time
 import pandas
 from xarray import open_dataset
 
+from app.config import OBSERVATION_TTL_DAYS
 from app.conversions import mps_to_bft, mps_to_kph
 from app.database import Database, Observation, Station
 from app.knmi_obs import KnmiApi
@@ -92,6 +93,7 @@ class ObservationWriter:
     def run(self):
         while True:
             self.ingest_latest_obs()
+            self._delete_old_observations()
             time.sleep(self.UPDATE_INTERVAL_SECONDS)
 
     def ingest_latest_obs(self):
@@ -121,6 +123,12 @@ class ObservationWriter:
                     setattr(obs, element_name, getattr(row, mapping.knmi_alias, None))
                 obs_list.append(obs)
             self.db.add_observations(obs_list)
+
+    def _delete_old_observations(self):
+        dt = (datetime.utcnow() - timedelta(days=OBSERVATION_TTL_DAYS))
+        print(f'Deleting observations before {dt.isoformat()} UTC')
+        deleted_row_count = self.db.delete_observations_before_timestamp(int(dt.timestamp()))
+        print(f'{deleted_row_count} rows deleted from database')
 
 
 class ObservationReader:
