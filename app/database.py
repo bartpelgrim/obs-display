@@ -101,17 +101,18 @@ class Observation(Base):
 class Database:
     def __init__(self, filepath: str):
         self.db_path = Path(filepath)
+        new_database = False
+        if not self.db_path.exists():
+            print(f'creating new database at {str(self.db_path)}')
+            self.db_path.parent.mkdir(exist_ok=True)  # creates data directory if doesn't exist
+            new_database = True
         self.engine = create_engine(
             f'sqlite+pysqlite:///{filepath}',
             echo=False,
             future=True,
             connect_args={"check_same_thread": False}
         )
-        self._create_db_if_not_exist()
-
-    def _create_db_if_not_exist(self):
-        if not self.db_path.exists():
-            print(f'creating new database at {str(self.db_path)}')
+        if new_database:
             Base.metadata.create_all(self.engine)
 
     def add_station(self, station: Station):

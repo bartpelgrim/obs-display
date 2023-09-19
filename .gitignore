@@ -1,5 +1,6 @@
 api_key.json
 id_rsa
+data/obs.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
