@@ -2,23 +2,19 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from io import BytesIO
 import json
-import os
 import time
 
 import pandas
 from xarray import open_dataset
 
-from app.config import OBSERVATION_TTL_DAYS
+from app.config import OBSERVATION_TTL_DAYS, DATABASE_PATH, API_KEY_PATH
 from app.conversions import mps_to_bft, mps_to_kph
 from app.database import Database, Observation, Station
 from app.knmi_obs import KnmiApi
 
-DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-DATABASE_PATH = os.path.join(DIR_PATH, '..', 'obs.db')
-
 
 def read_api_key() -> str:
-    with open(f'{DIR_PATH}/api_key.json') as key_file:
+    with open(API_KEY_PATH) as key_file:
         content = key_file.read()
         return json.loads(content)['key']
 

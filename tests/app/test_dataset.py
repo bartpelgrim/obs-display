@@ -1,9 +1,11 @@
 from datetime import datetime
+import os
 from unittest import mock
 
 from freezegun import freeze_time
 import pytest
 
+from app.config import APP_PATH
 from app.database import Database, Observation, Station
 from app.dataset import file_content_to_dataframe, ObservationReader, ObservationWriter
 
@@ -24,7 +26,7 @@ class TestDataset:
 class TestObservationWriter:
     @pytest.fixture(autouse=True)
     def __around(self):
-        with open('tests/data/KMDS__OPER_P___10M_OBS_L2_202103060830.nc', 'rb') as test_file:
+        with open(os.path.join(APP_PATH, '..', 'tests', 'data', 'KMDS__OPER_P___10M_OBS_L2_202103060830.nc'), 'rb') as test_file:
             with mock.patch('app.dataset.read_api_key', return_value=''):
                 with mock.patch('app.knmi_obs.KnmiApi.get_latest_obs', return_value=test_file.read()):
                     with mock.patch('app.dataset.DATABASE_PATH', ':memory:'):
@@ -85,8 +87,10 @@ class TestObservationReader:
         self.db.add_station(self.de_bilt)
         self.db.add_station(self.eindhoven)
         self.db.add_observations([self.obs1, self.obs2, self.obs3, self.obs4])
-        self.reader = ObservationReader()
-        self.reader.db = self.db
+        with mock.patch('app.dataset.DATABASE_PATH', ':memory:'):
+            self.reader = ObservationReader()
+            self.reader.db = self.db
+            yield
 
     def test_latest(self):
         result = self.reader.latest()
