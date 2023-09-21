@@ -5,6 +5,18 @@ import moment from 'moment'
 export default function Graph(props) {
   const { series, element } = props;
 
+  const CustomToolTip = ({active, payload, label}) => {
+    if (active && payload && payload.length) {
+      return (
+        <div>
+          <p>{moment(payload[0].payload.timestamp).format("HH:mm")}</p>
+          <p>{element.displayValue}: {payload[0].value}</p>
+        </div>
+      );
+    }
+    return null;
+  }
+
   if (series) {
     return (
       <div>
@@ -49,6 +61,7 @@ export default function Graph(props) {
                 isAnimationActive={false}
             >
             </Line>
+            <Tooltip content={<CustomToolTip />}/>
           </LineChart>
         </ResponsiveContainer>
       </div>
