@@ -88,12 +88,28 @@ export const elementConfiguration = [
     unit: 'mm'
   },
   {
+    key: "precipitation_intensity_past_10min_rain_gauge",
+    displayValue: "Precipitation Intensity",
+    lowerBound: 0,
+    upperBound: 50,
+    precisionDigits: 2,
+    unit: "mm/h"
+  },
+  {
     key: "cloud_cover_total",
     displayValue: "Total cloud cover",
     lowerBound: 0,
     upperBound: 8,
     precisionDigits: 0,
     unit: "octa"
+  },
+  {
+    key: "visibility",
+    displayValue: "Visibility",
+    lowerBound: 0,
+    upperBound: 30000,
+    precisionDigits: 0,
+    unit: "m"
   },
   {
     key: "weather_code",
