@@ -19,6 +19,8 @@ export default function HistoryMenu(props) {
 
   return(
     <Select
+      size="small"
+      sx={{width: 80, margin: 1}}
       labelId={"element-select-label"}
       id={"element-select-label"}
       value={selectedHistory}
@@ -26,7 +28,7 @@ export default function HistoryMenu(props) {
     >
       {historyOptions.map((history) =>
         <MenuItem key={history.key} value={history.key}>{history.displayValue}</MenuItem>
-      )}}
+      )}
     </Select>
   );
 }

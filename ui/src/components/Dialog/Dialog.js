@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
@@ -64,15 +65,17 @@ export default function CustomDialog(props) {
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           {selectedStation?.name}
         </BootstrapDialogTitle>
-        <ElementMenu
-          selectedElement={selectedElement}
-          setSelectedElement={setSelectedElement}
-          elementConfiguration={elementConfiguration}
-        />
-        <HistoryMenu
-          selectedHistory={selectedHistory}
-          setSelectedHistory={setSelectedHistory}
-        />
+        <Box sx={{margin: 1}}>
+          <ElementMenu
+            selectedElement={selectedElement}
+            setSelectedElement={setSelectedElement}
+            elementConfiguration={elementConfiguration}
+          />
+          <HistoryMenu
+            selectedHistory={selectedHistory}
+            setSelectedHistory={setSelectedHistory}
+          />
+        </Box>
         <Graph
           series={timeseriesData?.timeseries}
           element={selectedElement}

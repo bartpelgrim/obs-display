@@ -1,4 +1,4 @@
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Label } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Label, Tooltip } from 'recharts';
 import moment from 'moment'
 
 
@@ -20,7 +20,7 @@ export default function Graph(props) {
   if (series) {
     return (
       <div>
-        <ResponsiveContainer width="70%" height={300}>
+        <ResponsiveContainer width="90%" height={400}>
           <LineChart
               data={series}
           >
@@ -30,7 +30,7 @@ export default function Graph(props) {
               domain = {['auto', 'auto']}
               height={40}
               tickFormatter={(unixTime) => moment(unixTime).format("HH:mm")}
-              interval={2}
+              interval={"preserveEnd"}
 
               scale={"time"}
             >
@@ -42,9 +42,10 @@ export default function Graph(props) {
             <YAxis
                 type={"number"}
                 unit={element.unit}
-                width={80}
+                width={100}
                 domain={[dataMin => (Math.round(dataMin - 1)), dataMax => (Math.round(dataMax + 1))]}
                 interval={"preserveStartEnd"}
+                scale={"linear"}
             >
               <Label
                   value={element.displayValue}
@@ -53,8 +54,8 @@ export default function Graph(props) {
               />
             </YAxis>
             <Line
-                // key={"air_temperature"}
-                type={"linearOpen"}
+                type={"linear"}
+                dot={false}
                 dataKey={element.key}
                 stroke={"#ff0000"}
                 strokeOpacity={0.8}
