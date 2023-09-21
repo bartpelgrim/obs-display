@@ -110,12 +110,10 @@ function App() {
         />
         <Grid
           container
-          direction={"row"}
-          justify={"center"}
           alignItems={"center"}
           display={"flex"}
         >
-          <Grid item xs={6} md={5} lg={4} xl={2.5}>
+          <Grid item xs md={6} lg={4} xl={3}>
             <Sidebar
               selectedElement={selectedElement}
               setSelectedElement={setSelectedElement}
@@ -125,7 +123,7 @@ function App() {
               getLatestObs={getLatestObs}
             />
           </Grid>
-          <Grid item xs={6} md={7} lg={8} xl={9.5} sx={{fontSize: '3vh'}}>
+          <Grid item xs={12} md={12} lg={8} xl={9} sx={{fontSize: '3vh'}}>
             <PigeonMap
               observations={obsData}
               element={selectedElement}
