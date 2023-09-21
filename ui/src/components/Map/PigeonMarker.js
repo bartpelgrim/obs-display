@@ -5,21 +5,20 @@ import Tooltip from '@mui/material/Tooltip';
 function getFontSize(element, value) {
   const absValue = Math.abs(value);
   if (absValue < 10.0) {
-    return 20;
+    return 20 - (2 * element.precisionDigits)
   }
   else if (absValue < 100.0) {
-    if (element.precisionDigits === 0) {
-      return 20;
-    } else {
-      return 18;
-    }
+    return 20 - (2 * element.precisionDigits)
   }
   else if (absValue < 1000.0) {
-    if (element.precisionDigits === 0) {
-      return 18;
-    }
+    return 18 - (2 * element.precisionDigits)
   }
-  return 16;
+  else if (absValue < 10000.0) {
+    return 16 - (2 * element.precisionDigits)
+  }
+  else {
+    return 14
+  }
 }
 
 export function PigeonMarker (props) {
