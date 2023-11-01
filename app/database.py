@@ -170,4 +170,5 @@ class Database:
         with Session(self.engine) as session:
             result = session.execute(statement)
             deleted_row_count = result.rowcount
+            session.commit()
         return deleted_row_count
