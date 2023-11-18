@@ -8,9 +8,10 @@ import pandas
 from xarray import open_dataset
 
 from app.config import OBSERVATION_TTL_DAYS, DATABASE_PATH, API_KEY_PATH
-from app.conversions import mps_to_bft, mps_to_kph
+from app.conversions import mps_to_bft, mps_to_kph, weather_code_to_text
 from app.database import Database, Observation, Station
 from app.knmi_obs import KnmiApi
+from app.language import Language
 
 
 def read_api_key() -> str:
@@ -145,6 +146,8 @@ class ObservationReader:
             o['timestamp'] = o['timestamp'] * 1000  # from python to javascript timestamp
             o['wind_speed_bft'] = mps_to_bft(o.get('wind_speed'))
             o['wind_gust_kph'] = mps_to_kph(o.get('wind_gust'))
+            if weather_code := o.get('weather_code'):
+                o['weather_code_text'] = weather_code_to_text(weather_code, Language.NL)
             result.append(o)
 
         return result
