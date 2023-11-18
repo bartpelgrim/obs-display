@@ -1,8 +1,9 @@
-import { Map, Overlay } from 'pigeon-maps'
+import { Map } from 'pigeon-maps'
 import { useState, useEffect } from 'react'
 
 import { PigeonMarker } from './PigeonMarker.js'
 import WindMarker from '../WindMarker/WindMarker.js'
+import WeatherMarker from '../WeatherMarker/WeatherMarker'
 import { TimeOptions } from "../../model/Time";
 
 function mapTilerProvider(x, y, z) {
@@ -39,6 +40,19 @@ function PigeonMap(props) {
               >
               </WindMarker>
             );
+          }
+          else if (element.key === 'weather_code') {
+            return (
+              <WeatherMarker
+                key={obs.station.name}
+                anchor={[obs.station.latitude, obs.station.longitude]}
+                onMarkerClick={onMarkerClick}
+                station={obs.station}
+                weatherCode={obs[element.key]}
+                weatherText={obs["weather_code_text"]}
+              >
+              </WeatherMarker>
+            )
           }
           else {
             return (
