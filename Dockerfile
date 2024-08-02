@@ -28,7 +28,7 @@ RUN npm run build
 
 #COPY api_credentials.json $BUILD_DIR
 
-FROM python:3.11.2-slim-bullseye
+FROM python:3.12.4-slim-bookworm
 
 ARG BUILD_DIR
 ARG APP_DIR
