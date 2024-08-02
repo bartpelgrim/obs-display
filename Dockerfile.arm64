@@ -2,7 +2,7 @@ ARG BUILD_DIR="/build"
 ARG APP_DIR="$BUILD_DIR/app"
 ARG UI_DIR="$BUILD_DIR/ui"
 
-FROM arm64v8/python:3.11.2-bullseye as build-image
+FROM arm64v8/python:3.12.4-bookworm AS build-image
 
 RUN apt-get update && apt-get install -y npm
 # Install nodejs LTS version
