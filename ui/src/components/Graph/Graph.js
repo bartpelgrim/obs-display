@@ -1,71 +1,50 @@
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Label, Tooltip } from 'recharts';
-import moment from 'moment'
+import { LineChart } from '@mui/x-charts/LineChart';
+import moment from 'moment';
 
 
 export default function Graph(props) {
   const { series, element } = props;
 
-  const CustomToolTip = ({active, payload, label}) => {
-    if (active && payload && payload.length) {
-      return (
-        <div>
-          <p>{moment(payload[0].payload.timestamp).format("HH:mm")}</p>
-          <p>{element.displayValue}: {payload[0].value}</p>
-        </div>
-      );
-    }
-    return null;
-  }
 
   if (series) {
     return (
-      <div>
-        <ResponsiveContainer width="90%" height={400}>
-          <LineChart
-              data={series}
-          >
-            <XAxis
-              type={'number'}
-              dataKey={'timestamp'}
-              domain = {['auto', 'auto']}
-              height={40}
-              tickFormatter={(unixTime) => moment(unixTime).format("HH:mm")}
-              interval={"preserveEnd"}
-
-              scale={"time"}
-            >
-              <Label
-                  value={"Time"}
-                  position={"insideBottom"}
-              />
-            </XAxis>
-            <YAxis
-                type={"number"}
-                unit={element.unit}
-                width={100}
-                domain={[dataMin => (Math.round(dataMin - 1)), dataMax => (Math.round(dataMax + 1))]}
-                interval={"preserveStartEnd"}
-                scale={"linear"}
-            >
-              <Label
-                  value={element.displayValue}
-                  position={"insideLeft"}
-                  angle={-90}
-              />
-            </YAxis>
-            <Line
-                type={"linear"}
-                dot={false}
-                dataKey={element.key}
-                stroke={"#ff0000"}
-                strokeOpacity={0.8}
-                isAnimationActive={false}
-            >
-            </Line>
-            <Tooltip content={<CustomToolTip />}/>
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      <LineChart
+        dataset={series}
+        xAxis={[
+          {
+            dataKey: 'timestamp',
+            scaleType: 'time',
+            label: 'Time',
+            valueFormatter: (timestamp, context) => moment(timestamp).format("HH:mm"),
+          }
+          ]}
+        yAxis={[
+          {
+            label: `${element.displayValue} (${element.unit ?? "-"})`,
+          }
+        ]}
+        series={[
+          {
+            dataKey: element.key,
+            label: element.displayValue,
+            valueFormatter: (v) => `${v} ${element.unit ?? "-"}`,
+            color: '#e15759',
+            showMark: series.length < 50,
+            curve: 'linear',
+          }
+        ]}
+        grid={{vertical: true, horizontal: true}}
+        height={500}
+        margin={{
+          left: 80,
+          right: 50,
+          top: 50,
+          bottom: 80,
+        }}
+        skipAnimation={true}
+        // Move label of Y-Axis to the left
+        sx={{['.MuiChartsAxis-directionY .MuiChartsAxis-label']: {transform: 'translateX(-25px)'}}}
+      />
     );
   }
   else {
