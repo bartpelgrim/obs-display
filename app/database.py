@@ -99,8 +99,8 @@ class Observation(Base):
 
 
 class Database:
-    def __init__(self, filepath: str):
-        self.db_path = Path(filepath)
+    def __init__(self, filepath: Path):
+        self.db_path = filepath
         new_database = False
         if not self.db_path.exists():
             print(f'creating new database at {str(self.db_path)}')

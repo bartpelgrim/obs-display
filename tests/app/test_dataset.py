@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+from pathlib import Path
 from unittest import mock
 
 from freezegun import freeze_time
@@ -26,10 +27,10 @@ class TestDataset:
 class TestObservationWriter:
     @pytest.fixture(autouse=True)
     def __around(self):
-        with open(os.path.join(APP_PATH, '..', 'tests', 'data', 'KMDS__OPER_P___10M_OBS_L2_202103060830.nc'), 'rb') as test_file:
+        with open(Path(APP_PATH).parent.joinpath('tests/data/KMDS__OPER_P___10M_OBS_L2_202103060830.nc'), 'rb') as test_file:
             with mock.patch('app.dataset.read_api_key', return_value=''):
                 with mock.patch('app.knmi_obs.KnmiApi.get_latest_obs', return_value=test_file.read()):
-                    with mock.patch('app.dataset.DATABASE_PATH', ':memory:'):
+                    with mock.patch('app.dataset.DATABASE_PATH', Path(':memory:')):
                         self.obs_data = ObservationWriter()
                         yield
 
@@ -40,7 +41,7 @@ class TestObservationWriter:
 class TestObservationReader:
     @pytest.fixture(autouse=True)
     def __around(self):
-        self.db = Database(':memory:')
+        self.db = Database(Path(':memory:'))
         self.de_bilt = Station(
             id=6260,
             name='De Bilt',
@@ -87,7 +88,7 @@ class TestObservationReader:
         self.db.add_station(self.de_bilt)
         self.db.add_station(self.eindhoven)
         self.db.add_observations([self.obs1, self.obs2, self.obs3, self.obs4])
-        with mock.patch('app.dataset.DATABASE_PATH', ':memory:'):
+        with mock.patch('app.dataset.DATABASE_PATH', Path(':memory:')):
             self.reader = ObservationReader()
             self.reader.db = self.db
             yield

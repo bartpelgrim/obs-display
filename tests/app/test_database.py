@@ -1,4 +1,4 @@
-from copy import deepcopy
+from pathlib import Path
 
 import pytest
 
@@ -9,7 +9,7 @@ from app.database import Database, Station, Observation
 class TestDatabase:
     @pytest.fixture(autouse=True)
     def __around(self):
-        self.db = Database(':memory:')
+        self.db = Database(Path(':memory:'))
         self.de_bilt = Station(
             id=6260,
             name='De Bilt',
