@@ -6,7 +6,7 @@ import requests
 from app.exception import ApiException
 
 
-API_BASE_URL = 'https://api.dataplatform.knmi.nl/open-data/v1/datasets/10-minute-in-situ-meteorological-observations/versions/1.0/files '
+API_BASE_URL = 'https://api.dataplatform.knmi.nl/open-data/v1/datasets/10-minute-in-situ-meteorological-observations/versions/1.0/files'
 
 
 class KnmiApi:
