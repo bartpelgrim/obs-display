@@ -2,7 +2,7 @@ ARG BUILD_DIR="/build"
 ARG APP_DIR="$BUILD_DIR/app"
 ARG UI_DIR="$BUILD_DIR/ui"
 
-FROM python:3.12.4-bookworm AS build-image
+FROM python:3.13.7-trixie AS build-image
 
 RUN apt-get update && apt-get install -y npm
 # Install nodejs LTS version
@@ -28,7 +28,7 @@ RUN npm run build
 
 #COPY api_credentials.json $BUILD_DIR
 
-FROM python:3.12.4-slim-bookworm
+FROM python:3.13.7-slim-trixie
 
 ARG BUILD_DIR
 ARG APP_DIR
