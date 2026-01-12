@@ -67,6 +67,7 @@ mappings = {
     'cloud_base_height_layer_2': ElementMapping(unit='ft', knmi_alias='hc2'),
     'cloud_base_height_layer_3': ElementMapping(unit='ft', knmi_alias='hc3'),
     'cloud_cover_total': ElementMapping(unit='octa', knmi_alias='nc'),
+    'cloud_cover_low_mid': ElementMapping(unit='octa', knmi_alias='nhc'),
     'cloud_cover_layer_1': ElementMapping(unit='octa', knmi_alias='nc1'),
     'cloud_cover_layer_2': ElementMapping(unit='octa', knmi_alias='nc2'),
     'cloud_cover_layer_3': ElementMapping(unit='octa', knmi_alias='nc3'),

@@ -104,6 +104,14 @@ export const elementConfiguration = [
     unit: "octa"
   },
   {
+    key: "cloud_base_height",
+    displayValue: "Cloud base height",
+    lowerBound: 0,
+    upperBound: 10000,
+    precisionDigits: 0,
+    unit: "octa"
+  },
+  {
     key: "visibility",
     displayValue: "Visibility",
     lowerBound: 0,
